@@ -1,0 +1,17 @@
+{% load static %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css"
+          href="{% static '/assets/css/bootstrap.min.css' %}"/>
+    <title>{% block title %}Profundiza | Miel-Tech{% endblock %}</title>
+</head>
+<body>
+<div class="navbar"></div>
+{% block content %}
+{% endblock %}
+</body>
+</html>

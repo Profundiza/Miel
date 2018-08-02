@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    {% if failed == 'failed' %}
+        <div class="alert-warning">Failed to login</div>
+    {% endif %}
+    <form method="POST" action="{% url 'account:login_submit' %}">
+        {% csrf_token %}
+        <label for="sample-user">Username: </label><input type="text" name="username" id="sample-user" />
+        <label for="sample-pwd">Password: </label><input type="password" name="password" id="sample-pwd" />
+        <button type="submit">Submit</button>
+    </form>
+
+{% endblock %}
