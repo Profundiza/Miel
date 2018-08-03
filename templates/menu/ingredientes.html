@@ -36,7 +36,12 @@
   </div>
   <div class="form-group">
     <label for="input-medida" class="bmd-label-floating">Medida</label>
-    <input type="number" class="form-control" id="input-medida">
+      <select id="input-medida" class="form-control">
+          {% for medida in medidas %}
+          <option>{{ medida }}</option>
+          {% endfor %}
+          {% endfor %}
+      </select>
   </div>
   <div class="form-group">
     <label for="input-cantidad" class="bmd-label-floating">Cantidad</label>

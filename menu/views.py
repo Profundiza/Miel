@@ -24,7 +24,8 @@ def bebidas(request):
 def ingredientes(request):
     context = {
         'ingredientes': Ingrediente.objects.all(),
-        'proveedores': Proveedor.objects.all()
+        'proveedores': Proveedor.objects.all(),
+        'medidas': ['oz', 'lb', 'gal', 'L', 'mL', 'g', 'kg', 'unit', 'dozen']
     }
     return render(request, 'menu/ingredientes.html', context)
 
