@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^bebidas/$', views.bebidas, name='bebidas'),
     url(r'^ingredientes/$', views.ingredientes, name='ingredientes'),
     url(r'^ingredientes/$', views.ingredientes, name='ingredientes_sort'),
+    url(r'^ingredientes/$', views.ingredientes, name='ingredientes_add'),
     url(r'^recetas/$', views.recetas, name='recetas'),
 ]

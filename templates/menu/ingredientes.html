@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Platillos{% endblock %}
+{% block title %}Ingredientes{% endblock %}
 {% block content %}
 {% include "menu/menu_tabs.html" %}
 <div class="modal" id="add-ing" tabindex="-1" role="dialog">
@@ -11,42 +11,44 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form>
+      <form method="POST" action="{% url 'menu:ingredientes_add' %}">
       <div class="modal-body">
-        <p>Modal body text goes here.</p>
- <div class="form-group">
-     <label for="input-nombre" class="bmd-label-floating">Nombre</label>
-     <input type="text" class="form-control" id="input-nombre">
-  </div>
-  <div class="form-group">
-    <label for="input-marca" class="bmd-label-floating">Marca</label>
-    <input type="text" class="form-control" id="input-marca">
-  </div>
-  <div class="form-group">
-    <label for="input-costo" class="bmd-label-floating">Costo</label>
-    <input type="number" class="form-control" id="input-costo">
-  </div>
-  <div class="form-group">
-    <label for="input-proveedor" class="bmd-label-floating">Proveedor</label>
-      <select id="input-proveedor" class="form-control">
-          {% for proveedor in proveedores %}
-          <option>{{ proveedor.name }}</option>
-          {% endfor %}
-      </select>
-  </div>
-  <div class="form-group">
-    <label for="input-medida" class="bmd-label-floating">Medida</label>
-      <select id="input-medida" class="form-control">
-          {% for medida in medidas %}
-          <option>{{ medida }}</option>
-          {% endfor %}
-          {% endfor %}
-      </select>
-  </div>
-  <div class="form-group">
-    <label for="input-cantidad" class="bmd-label-floating">Cantidad</label>
-    <input type="number" class="form-control" id="input-cantidad">
-  </div>
+      <div class="form-row">
+          <div class="col-6 form-group">
+             <label for="input-nombre" class="bmd-label-floating">Nombre</label>
+             <input type="text" class="form-control" id="input-nombre" name="input-nombre">
+          </div>
+          <div class="col-6 form-group">
+            <label for="input-marca" class="bmd-label-floating">Marca</label>
+             <input type="text" class="form-control" id="input-marca" name="input-marca">
+          </div>
+      </div>
+      <div class="form-group">
+        <label for="input-proveedor" class="bmd-label-floating">Proveedor</label>
+          <select id="input-proveedor" class="form-control" name="input-proveedor">
+              {% for proveedor in proveedores %}
+              <option value="{{ proveedor.name }}">{{ proveedor.name }}</option>
+              {% endfor %}
+          </select>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-6">
+            <label for="input-cantidad">Cantidad</label>
+            <input type="number" class="form-control" id="input-cantidad" name="input-cantidad">
+          </div>
+        <div class="form-group col-6" style="margin-top: 0;">
+        <label for="input-medida" class="bmd-label-floating">Medida</label>
+          <select id="input-medida" name="input-medida" class="form-control">
+              {% for medida in medidas %}
+              <option value="{{ medida }}">{{ medida }}</option>
+              {% endfor %}
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="input-costo" class="bmd-label-floating">Costo ($)</label>
+        <input type="number" class="form-control" id="input-costo">
+      </div>
       </div>
       <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Anadir</button>

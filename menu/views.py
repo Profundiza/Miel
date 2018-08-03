@@ -27,7 +27,17 @@ def ingredientes(request):
         'proveedores': Proveedor.objects.all(),
         'medidas': ['oz', 'lb', 'gal', 'L', 'mL', 'g', 'kg', 'unit', 'dozen']
     }
+    # TODO medidas editable in admin
     return render(request, 'menu/ingredientes.html', context)
+
+
+def add_ingredientes(request):
+    name = request.GET['input-nombre']
+    brand = request.GET['input-marca']
+    proveedor = request.GET['input-proveedor']
+    cost = request.GET['input-costo']
+    measurement = request.GET['input-medida']
+    quantity = request.GET['input-cantidad']
 
 
 def recetas(request):
