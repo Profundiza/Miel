@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-
+AUTH_USER_MODEL = 'menu.CustomUser'
 MIDDLEWARE = [
     #'Miel.middleware.AuthRequiredMiddleware',
     'django.middleware.security.SecurityMiddleware',
