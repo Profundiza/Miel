@@ -24,29 +24,17 @@ def login_display(request, failed=''):
 
 
 def login_submit(request):
-
     user = request.POST['username']
     pwd = request.POST['password']
     request.session['user'] = user
     user = authenticate(username=user, password=pwd)
     if user is not None:
         login(request, user)
-        return HttpResponseRedirect(reverse('menu:main'))
+        return HttpResponseRedirect(reverse('account:apps'))
     else:
-        #return HttpResponseRedirect(reverse('account:login_failed'))
         return HttpResponseRedirect(reverse('account:login_fail',
                                             kwargs={'failed': 'failed'}))
 
 
-def login_failed(request):
-    return render(request, 'account/login_failed.html')
-
-
-class LoginView(FormView):
-    template_name = 'login_display.html'
-    form_class = LoginForm
-    success_url = '/apps/'
-
-    def form_valid(self, form):
-        form.auth()
-        return super().form_valid()
+def view_apps(request):
+    return render(request, 'account/apps.html')

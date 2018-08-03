@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Menu Engineering{% endblock %}
+{% block navbar %}
+<nav class="navbar navbar-inverse">
+    <ul class="nav navbar-nav">
+      <li><a href="{% url 'menu:platillos' %}">Platillos</a></li>
+      <li><a href="{% url 'menu:ingredientes' %}">Ingredientes</a></li>
+    </ul>
+</nav>
+{% endblock %}

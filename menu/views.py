@@ -1,9 +1,9 @@
 from django.shortcuts import render
 
 
-def analiticos(request):
+def analisis(request):
     context = {}
-    return render(request, 'menu/analiticos.html', context)
+    return render(request, 'menu/analisis.html', context)
 
 
 def platillos(request):

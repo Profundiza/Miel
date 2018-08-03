@@ -1,0 +1,59 @@
+{% load static %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css"
+          href="{% static '/assets/css/bootstrap.min.css' %}"/>
+    <title>{% block title %}Profundiza | Miel-Tech{% endblock %}</title>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-light">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Profundiza</a>
+        </div>
+        <ul class="nav navbar-nav navbar-left">
+          <li><a href="{% url 'account:view_apps' %}">Apps</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="{% url 'account:account' %}">Account</a></li>
+          <li><a href="{% url 'account:login' %}">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    {% block navbar %}{% endblock %}
+{% block content %}
+{% endblock %}
+    <footer id="footer">
+        <div class="footer_top">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="footer_widget">
+                        <h2>Never miss an exclusive discount</h2>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="footer_widget">
+                        <h2>Become a Reviewer</h2>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <div class="footer_widget">
+                        <h2>Join as a Seller</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer_bottom">
+            <p class="copyright">Copyright &copy; 2017 <a href="">Profundiza</a></p>
+            <p class="developer"><a href="">Ethics</a> | <a href="">Terms of Service</a> | <a
+                    href="">Privacy Policy</a></p>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

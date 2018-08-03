@@ -2,7 +2,7 @@
 {% block title %}Login{% endblock %}
 {% block content %}
     {% if failed == 'failed' %}
-        <div class="alert-warning">Failed to login</div>
+        <div class="alert alert-warning">Failed to login</div>
     {% endif %}
     <form method="POST" action="{% url 'account:login_submit' %}">
         {% csrf_token %}
