@@ -6,6 +6,7 @@ class Restaurante(models.Model):
     name = models.CharField(max_length=100)
 
 
+# TODO Move to accounts app
 class CustomUser(AbstractUser):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     is_admin = models.BooleanField(default=False)

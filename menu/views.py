@@ -1,4 +1,6 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 
 from .models import *
 
@@ -9,7 +11,22 @@ def analisis(request):
 
 
 def proveedores(request):
-    return render(request, 'menu/proveedores.html')
+    context = {
+        'proveedores': Proveedor.objects.all(),
+    }
+    return render(request, 'menu/proveedores.html', context)
+
+
+def add_proveedores(request):
+    fields = {
+        'name': request.POST['input-nombre'],
+        'phone': request.POST['input-phone'],
+        'sales_rep': request.POST['input-rep'],
+        'sales_rep_phone': request.POST['input-rep_phone'],
+        'email': request.POST['input-email'],
+    }
+    Proveedor.objects.create(fields)
+    return HttpResponseRedirect(reverse('menu:proveedor'))
 
 
 def platillos(request):
@@ -32,12 +49,16 @@ def ingredientes(request):
 
 
 def add_ingredientes(request):
-    name = request.GET['input-nombre']
-    brand = request.GET['input-marca']
-    proveedor = request.GET['input-proveedor']
-    cost = request.GET['input-costo']
-    measurement = request.GET['input-medida']
-    quantity = request.GET['input-cantidad']
+    fields = {
+        'name': request.POST['input-nombre'],
+        'brand': request.POST['input-marca'],
+        'proveedor': request.POST['input-proveedor'],
+        'cost': request.POST['input-costo'],
+        'measurement': request.POST['input-medida'],
+        'quantity': request.POST['input-cantidad']
+    }
+    ingrediente = Ingrediente.objects.create(fields)
+    return HttpResponseRedirect(reverse('menu:ingredientes'))
 
 
 def recetas(request):
