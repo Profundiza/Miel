@@ -1,12 +1,5 @@
-{% extends "menu/base.html" %}
-
-{% block tab_nav %}
-<div class="row">
-<div class="col-lg-2"><a href="{% url 'menu:proveedores' %}" class="btn btn-block">Proveedores</a></div>
-<div class="col-lg-2"><a href="{% url 'menu:ingredientes' %}" class="btn btn-block">Ingredientes</a></div>
-<div class="col-lg-2"><a href="#" class="btn btn-block">Recetas</a></div>
-<div class="col-lg-2"><a href="{% url 'menu:platillos' %}" class="btn btn-block">Platillos</a></div>
-<div class="col-lg-2"><a href="#" class="btn btn-block">Bebidas</a></div>
-<div class="col-lg-2"><a href="{% url 'menu:main' %}" class="btn btn-primary btn-block">Analisis</a></div>
-</div>
+{% extends "base.html" %}
+{% block title %}Analisis{% endblock %}
+{% block content %}
+{% include "menu/menu_tabs.html" %}
 {% endblock %}

@@ -1,0 +1,10 @@
+<div class="row">
+{#TODO responsive for mid sized screen words not centered #}
+{#TODO turn into navbar #}
+<div class="col-lg-2"><a href="{% url 'menu:main' %}" class="btn {% if request.resolver_match.view_name == "menu:main" %}btn-primary{% endif %} btn-block">Analisis</a></div>
+<div class="col-lg-2"><a href="{% url 'menu:proveedores' %}" class="btn {% if request.resolver_match.view_name == "menu:proveedores" %}btn-primary{% endif %} btn-block">Proveedores</a></div>
+<div class="col-lg-2"><a href="{% url 'menu:ingredientes' %}" class="btn {% if request.resolver_match.view_name == "menu:ingredientes" %}btn-primary{% endif %} btn-block">Ingredientes</a></div>
+<div class="col-lg-2"><a href="{% url 'menu:recetas' %}" class="btn {% if request.resolver_match.view_name == "menu:recetas" %}btn-primary{% endif %} btn-block">Recetas</a></div>
+<div class="col-lg-2"><a href="{% url 'menu:platillos' %}" class="btn {% if request.resolver_match.view_name == "menu:platillos" %}btn-primary{% endif %} btn-block">Platillos</a></div>
+<div class="col-lg-2"><a href="{% url 'menu:bebidas' %}" class="btn {% if request.resolver_match.view_name == "menu:bebidas" %}btn-primary{% endif %} btn-block">Bebidas</a></div>
+</div>

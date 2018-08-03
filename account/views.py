@@ -1,4 +1,4 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -30,11 +30,16 @@ def login_submit(request):
     user = authenticate(username=user, password=pwd)
     if user is not None:
         login(request, user)
-        return HttpResponseRedirect(reverse('account:apps'))
+        return HttpResponseRedirect(reverse('account:dashboard'))
     else:
         return HttpResponseRedirect(reverse('account:login_fail',
                                             kwargs={'failed': 'failed'}))
 
 
-def view_apps(request):
-    return render(request, 'account/apps.html')
+def my_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('account:login'))
+
+
+def dashboard(request):
+    return render(request, 'account/dashboard.html')

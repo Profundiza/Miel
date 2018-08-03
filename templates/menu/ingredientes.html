@@ -1,12 +1,106 @@
-{% extends "menu/base.html" %}
-{% block title %}Ingredientes{% endblock %}
-{% block tab_nav %}
+{% extends "base.html" %}
+{% block title %}Platillos{% endblock %}
+{% block content %}
+{% include "menu/menu_tabs.html" %}
+<div class="modal" id="add-ing" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Anadir Ingrediente</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form>
+      <div class="modal-body">
+        <p>Modal body text goes here.</p>
+ <div class="form-group">
+     <label for="input-nombre" class="bmd-label-floating">Nombre</label>
+     <input type="text" class="form-control" id="input-nombre">
+  </div>
+  <div class="form-group">
+    <label for="input-marca" class="bmd-label-floating">Marca</label>
+    <input type="text" class="form-control" id="input-marca">
+  </div>
+  <div class="form-group">
+    <label for="input-costo" class="bmd-label-floating">Costo</label>
+    <input type="number" class="form-control" id="input-costo">
+  </div>
+  <div class="form-group">
+    <label for="input-proveedor" class="bmd-label-floating">Proveedor</label>
+      <select id="input-proveedor" class="form-control">
+          {% for proveedor in proveedores %}
+          <option>{{ proveedor.name }}</option>
+          {% endfor %}
+      </select>
+  </div>
+  <div class="form-group">
+    <label for="input-medida" class="bmd-label-floating">Medida</label>
+    <input type="number" class="form-control" id="input-medida">
+  </div>
+  <div class="form-group">
+    <label for="input-cantidad" class="bmd-label-floating">Cantidad</label>
+    <input type="number" class="form-control" id="input-cantidad">
+  </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Anadir</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
 <div class="row">
-<div class="col-lg-2"><a href="{% url 'menu:proveedores' %}" class="btn btn-block">Proveedores</a></div>
-<div class="col-lg-2"><a href="{% url 'menu:ingredientes' %}" class="btn btn-primary btn-block">Ingredientes</a></div>
-<div class="col-lg-2"><a href="#" class="btn btn-block">Recetas</a></div>
-<div class="col-lg-2"><a href="{% url 'menu:platillos' %}" class="btn btn-block">Platillos</a></div>
-<div class="col-lg-2"><a href="#" class="btn btn-block">Bebidas</a></div>
-<div class="col-lg-2"><a href="{% url 'menu:main' %}" class="btn btn-block">Analisis</a></div>
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Ingredientes</h4>
+          <p class="card-category"> Here is a subtitle for this table</p>
+        </div>
+    <div class="card-body">
+    <button class="btn btn-primary" rel="tooltip" data-toggle="modal" data-target="#add-ing"><i class="material-icons">add</i></button>
+    <form method="GET" action="{% url 'menu:ingredientes_sort' %}">
+
+    </form>
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="text-primary">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Proveedor</th>
+                    <th>Costo</th>
+                    <th>Medida</th>
+                    <th>Cantidad</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+            {#TODO make table more narrow, expand to modal for more information#}
+            {#TODO collapsable table columns#}
+            {% for ingredient in ingredientes %}
+                <tr><td>{{ ingredient.name }}</td></tr>
+                <tr><td>{{ ingredient.brand }}</td></tr>
+                <tr><td>{{ ingredient.proveedor }}</td></tr>
+                <tr><td>{{ ingredient.costo }}</td></tr>
+                <tr><td>{{ ingredient.measurement }}</td></tr>
+                <tr><td>{{ ingredient.quantity }}</td></tr>
+                <tr><td class="td-actions text-right">
+                    <button type="button" rel="tooltip" class="btn btn-success">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button type="button" rel="tooltip" class="btn btn-danger">
+                        <i class="material-icons">close</i>
+                    </button>
+                </td></tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    </div>
+  </div>
+</div>
 </div>
 {% endblock %}
+

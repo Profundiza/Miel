@@ -13,8 +13,10 @@ class Proveedor(models.Model):
 
 
 class Ingrediente(models.Model):
-    proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT)
     name = models.CharField(max_length=50)
+    brand = models.CharField(max_length=50, default='temp')
+    proveedor = models.ForeignKey(Proveedor, on_delete=models.PROTECT)
+    cost = models.FloatField(default=0)
     measurement = models.CharField(max_length=30)
     quantity = models.FloatField()
 
