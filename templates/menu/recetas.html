@@ -2,4 +2,72 @@
 {% block title %}Recetas{% endblock %}
 {% block content %}
 {% include "menu/menu_tabs.html" %}
+<div class="modal" id="add-prov" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Anadir Receta</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form method="POST" action="{% url 'menu:recetas_add' %}">
+      {% csrf_token %}
+      <div class="modal-body">
+      <div class="form-group">
+         <label for="input-nombre" class="bmd-label-floating">Nombre de Receta</label>
+         <input type="text" class="form-control" id="input-nombre" name="input-nombre">
+      </div>
+      <div class="form-row">
+          <div class="form-group col-6">
+            <label for="input-cantidad">Cantidad</label>
+            <input type="number" class="form-control" id="input-cantidad" name="input-cantidad">
+          </div>
+        <div class="form-group col-6" style="margin-top: 0;">
+          <select id="input-medida" name="input-medida" class="form-control">
+              {% for medida in medidas %}
+              <option value="{{ medida }}">{{ medida }}</option>
+              {% endfor %}
+          </select>
+        </div>
+      </div>
+        <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text">
+              <i class="material-icons">search</i>
+          </span>
+        </div>
+        <input type="text" class="form-control" id="add-receta-filter" placeholder="Filtrar ingredientes">
+
+      </div>
+      <div class="table-responsive table-wrapper-scroll-y">
+          <table class="table table-condensed" id="add-receta-table">
+              <thead>
+                <tr class="table-head">
+                    <th>Ingrediente</th>
+                    <th>Proveedor</th>
+                    <th>Cantidad</th>
+                    <th>Medida</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ingredient in ingredientes %}
+                    <tr>
+                        <td>{{ ingredient.name }}</td>
+                        <td>{{ ingredient.proveedor }}</td>
+                        <td><input type="number" class="form-control" name="ing-{{ ingredient.id }}" value="0"></td>
+                        <td>{{ ingredient.measurement }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+      </div>
+
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
 {% endblock %}

@@ -12,10 +12,11 @@
         </button>
       </div>
       <form method="POST" action="{% url 'menu:ingredientes_add' %}">
+      {% csrf_token %}
       <div class="modal-body">
       <div class="form-row">
           <div class="col-6 form-group">
-             <label for="input-nombre" class="bmd-label-floating">Nombre</label>
+             <label for="input-nombre" class="bmd-label-floating">Ingrediente</label>
              <input type="text" class="form-control" id="input-nombre" name="input-nombre">
           </div>
           <div class="col-6 form-group">
@@ -28,7 +29,7 @@
         <label for="input-proveedor" class="bmd-label-floating">Proveedor</label>
           <select id="input-proveedor" class="form-control" name="input-proveedor">
               {% for proveedor in proveedores %}
-              <option value="{{ proveedor.name }}">{{ proveedor.name }}</option>
+              <option value="{{ proveedor.id }}">{{ proveedor.name }}</option>
               {% endfor %}
           </select>
       </div>
@@ -53,7 +54,7 @@
       </div>
       <div class="form-group">
         <label for="input-costo" class="bmd-label-floating">Costo ($)</label>
-        <input type="number" class="form-control" id="input-costo">
+        <input type="number" class="form-control" id="input-costo" name="input-costo">
       </div>
       </div>
       <div class="modal-footer">
@@ -89,20 +90,20 @@
                     <th>Costo</th>
                     <th>Medida</th>
                     <th>Cantidad</th>
-                    <th>Accion</th>
+                    <th class="text-right">Accion</th>
                 </tr>
             </thead>
             <tbody>
             {#TODO make table more narrow, expand to modal for more information#}
             {#TODO collapsable table columns#}
             {% for ingredient in ingredientes %}
-                <tr><td>{{ ingredient.name }}</td></tr>
-                <tr><td>{{ ingredient.brand }}</td></tr>
-                <tr><td>{{ ingredient.proveedor }}</td></tr>
-                <tr><td>{{ ingredient.costo }}</td></tr>
-                <tr><td>{{ ingredient.measurement }}</td></tr>
-                <tr><td>{{ ingredient.quantity }}</td></tr>
-                <tr><td class="td-actions text-right">
+                <tr><td>{{ ingredient.name }}</td>
+                <td>{{ ingredient.brand }}</td>
+                <td>{{ ingredient.proveedor }}</td>
+                <td>{{ ingredient.cost }}</td>
+                <td>{{ ingredient.measurement }}</td>
+                <td>{{ ingredient.quantity }}</td>
+                <td class="td-actions text-right">
                     <button type="button" rel="tooltip" class="btn btn-success">
                         <i class="material-icons">edit</i>
                     </button>

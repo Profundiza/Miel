@@ -4,6 +4,10 @@ from django.urls import reverse
 
 from .models import *
 
+# TODO medidas editable in admin
+# TODO constants file
+MEDIDAS = ['oz', 'lb', 'gal', 'L', 'mL', 'g', 'kg', 'unit', 'dozen']
+
 
 def analisis(request):
     context = {}
@@ -17,7 +21,7 @@ def proveedores(request):
     return render(request, 'menu/proveedores.html', context)
 
 
-def add_proveedores(request):
+def add_proveedor(request):
     fields = {
         'name': request.POST['input-nombre'],
         'phone': request.POST['input-phone'],
@@ -25,8 +29,8 @@ def add_proveedores(request):
         'sales_rep_phone': request.POST['input-rep_phone'],
         'email': request.POST['input-email'],
     }
-    Proveedor.objects.create(fields)
-    return HttpResponseRedirect(reverse('menu:proveedor'))
+    Proveedor.objects.create(**fields)
+    return HttpResponseRedirect(reverse('menu:proveedores'))
 
 
 def platillos(request):
@@ -39,27 +43,46 @@ def bebidas(request):
 
 
 def ingredientes(request):
+    # TODO add current user's restaurant
     context = {
+        'restaurante': '',
         'ingredientes': Ingrediente.objects.all(),
         'proveedores': Proveedor.objects.all(),
-        'medidas': ['oz', 'lb', 'gal', 'L', 'mL', 'g', 'kg', 'unit', 'dozen']
+        'medidas': MEDIDAS
     }
-    # TODO medidas editable in admin
     return render(request, 'menu/ingredientes.html', context)
 
 
-def add_ingredientes(request):
+def add_ingredient(request):
+    # TODO add current user's restaurant
     fields = {
+        'restaurante': '',
         'name': request.POST['input-nombre'],
         'brand': request.POST['input-marca'],
-        'proveedor': request.POST['input-proveedor'],
+        'proveedor': Proveedor.objects.get(id=request.POST['input-proveedor']),
         'cost': request.POST['input-costo'],
         'measurement': request.POST['input-medida'],
         'quantity': request.POST['input-cantidad']
     }
-    ingrediente = Ingrediente.objects.create(fields)
+    Ingrediente.objects.create(**fields)
     return HttpResponseRedirect(reverse('menu:ingredientes'))
 
 
 def recetas(request):
-    return render(request, 'menu/recetas.html')
+    context = {
+        'recetas': Receta.objects.all(),
+        'ingredientes': Ingrediente.objects.all(),
+        'medidas': MEDIDAS
+    }
+    return render(request, 'menu/recetas.html', context)
+
+
+def add_receta(request):
+    hi = "hi"
+    fields = {
+        'restaurante': '',
+        'name': request.POST['input-nombre'],
+        # TODO fix ingrediente filter
+        'ingredientes': Ingrediente.objects.filter(id in request.POST['input-ingredientes'])
+    }
+    return HttpResponseRedirect(reverse('menu:recetas'))
