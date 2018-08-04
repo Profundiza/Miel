@@ -1,5 +1,5 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 
 from .models import *
@@ -34,8 +34,20 @@ def add_proveedor(request):
 
 
 def platillos(request):
-    context = {}
+    context = {
+        'restaurante': request.user.restaurante,
+        'platillos': Platillo.objects.all(),
+        'ingredientes': Ingrediente.objects.all()
+    }
     return render(request, 'menu/platillos.html', context)
+
+
+def add_platillo(request):
+    fields = {
+
+    }
+    Platillo.objects.create(**fields)
+    return redirect('menu:platillos')
 
 
 def bebidas(request):
@@ -45,7 +57,7 @@ def bebidas(request):
 def ingredientes(request):
     # TODO add current user's restaurant
     context = {
-        'restaurante': '',
+        'restaurante': request.user.restaurante,
         'ingredientes': Ingrediente.objects.all(),
         'proveedores': Proveedor.objects.all(),
         'medidas': MEDIDAS
@@ -56,7 +68,7 @@ def ingredientes(request):
 def add_ingredient(request):
     # TODO add current user's restaurant
     fields = {
-        'restaurante': '',
+        'restaurante': request.user.restaurante,
         'name': request.POST['input-nombre'],
         'brand': request.POST['input-marca'],
         'proveedor': Proveedor.objects.get(id=request.POST['input-proveedor']),
@@ -78,19 +90,23 @@ def recetas(request):
 
 
 def add_receta(request):
-    hi = "hi"
+    hi = "hi",
+        # TODO fix ingrediente filter
     my_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing'))
     fields = {
         'restaurante': request.user.restaurante,
         'name': request.POST['input-nombre'],
-        # TODO fix ingrediente filter
-        'ingredientes': my_ingredientes
+        'measurement': request.POST['input-medida'],
+        'quantity': request.POST['input-cantidad'],
+        'cost': models.FloatField()
     }
 
+    receta = Receta.objects.create(**fields)
     for ing in my_ingredientes:
         ing_fields = {
-            'restaurante': request.user.restaurante,
+            'receta': receta,
+            'ingrediente': ing,
+            'quantity': request.POST['input-cantidad']
         }
-        RecetaComp.objects.create()
-    Receta.objects.create(**fields)
+        RecetaComp.objects.create(**ing_fields)
     return HttpResponseRedirect(reverse('menu:recetas'))

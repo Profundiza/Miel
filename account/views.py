@@ -1,10 +1,26 @@
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic.edit import FormView
 
 from account.forms import *
+from menu.views import *
+
+
+def register(request):
+    fields = {
+        'first_name': request.POST["first-name"],
+        'last_name': request.POST['last-name'],
+        'restaurant': Restaurante.objects.get(code=request.POST['restaurant-code']),
+        'email': request.POST['register-email'],
+        'password': request.POST['register-pwd'],
+        'is_admin': request.POST['user-type'] == 'admin',
+        'is_manager': request.POST['user-type'] == 'manager',
+        'is_employee': request.POST['user-type'] == 'employee',
+    }
+    CustomUser.objects.create(**fields)
+    return redirect("account:account")
 
 
 def account(request):
@@ -24,10 +40,9 @@ def login_display(request, failed=''):
 
 
 def login_submit(request):
-    user = request.POST['username']
+    email = request.POST['input-email']
     pwd = request.POST['password']
-    request.session['user'] = user
-    user = authenticate(username=user, password=pwd)
+    user = authenticate(username=email, password=pwd)
     if user is not None:
         login(request, user)
         return HttpResponseRedirect(reverse('account:dashboard'))

@@ -4,7 +4,10 @@ from django.db import models
 
 class Restaurante(models.Model):
     name = models.CharField(max_length=100)
-    code = models.CharField(max_length=100)
+    code = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 # TODO Move to accounts app
@@ -44,6 +47,9 @@ class Receta(models.Model):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT, null=True)
     name = models.CharField(max_length=50)
     ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp')
+    measurement = models.CharField(max_length=30)
+    quantity = models.FloatField()
+    cost = models.FloatField()
 
     def __str__(self):
         return self.name

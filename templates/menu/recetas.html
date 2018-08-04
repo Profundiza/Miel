@@ -30,6 +30,10 @@
               {% endfor %}
           </select>
         </div>
+        <div class="form-row">
+        <label for="input-costo" class="bmd-label-floating">Costo ($)</label>
+        <input type="number" class="form-control" id="input-costo" name="input-costo">
+      </div>
       </div>
         <div class="input-group">
         <div class="input-group-prepend">
@@ -83,6 +87,50 @@
     </div>
   </div>
 </div>
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
+<div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary">
+          <h4 class="card-title ">Recetas</h4>
+        </div>
+    <div class="card-body">
+    <button class="btn btn-primary btn-round" rel="tooltip" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
+    {% if recetas.count == 0 %}
+    No hay ningun recetas.
+    {% else %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead class="text-primary">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Costo</th>
+                    <th class="text-right">Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+            {#TODO make table more narrow, expand to modal for more information#}
+            {#TODO collapsable table coluemns#}
+            {% for receta in recetas %}
+                <tr><td>{{ receta.name }}</td>
+                <td>{{ receta.cost }}</td>
+                <td class="td-actions text-right">
+                    <button type="button" rel="tooltip" class="btn btn-info">
+                        <i class="material-icons">remove_red_eye</i>
+                    </button>
+                    <button type="button" rel="tooltip" class="btn btn-success">
+                        <i class="material-icons">edit</i>
+                    </button>
+                    <button type="button" rel="tooltip" class="btn btn-danger">
+                        <i class="material-icons">close</i>
+                    </button>
+                </td></tr>
+            {% endfor %}
+            </tbody>
+            </table>
+        </div>
+    {% endif %}
+    </div>
+  </div>
+</div>
+</div>
 {% endblock %}

@@ -4,6 +4,9 @@
   overflow-y: auto;
   -ms-overflow-style: -ms-autohiding-scrollbar;
 }
-.table-filter th, td {
+th.table-filter, td.table-filter {
   font-size: 12px!important;
+}
+.center {
+  margin: auto;
 }
