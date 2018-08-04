@@ -2,7 +2,7 @@
 {#TODO responsive for mid sized screen words not centered #}
 {#TODO turn into navbar #}
 <ul class="nav nav-pills" role="tablist">
-    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:main" %}active{% endif %}" href="{% url 'menu:main' %}">Analisis</a></li>
+    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:main" %}active{% endif %}" href="{% url 'menu:main' %}">An&aacute;lisis</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:proveedores" %}active{% endif %}" href="{% url 'menu:proveedores' %}">Proveedores</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:ingredientes" %}active{% endif %}" href="{% url 'menu:ingredientes' %}">Ingredientes</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:recetas" %}active{% endif %}" href="{% url 'menu:recetas' %}">Recetas</a></li>

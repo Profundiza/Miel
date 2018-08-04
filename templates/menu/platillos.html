@@ -1,24 +1,25 @@
 {% extends "base.html" %}
-{% block title %}Platillos{% endblock %}
+{% block title %}{{ tipo|title }}s{% endblock %}
 {% block content %}
     {% include "menu/menu_tabs.html" %}
     <div class="modal" id="add-prov" tabindex="-1" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Anadir Platillo</h5>
+                    <h5 class="modal-title">A&ntilde;adir {{ tipo|title }}</h5>
                     <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="POST" action="{% url 'menu:recetas_add' %}">
+            {% with 'menu:'|add:tipo|add:'s_add' as url_arg %}
+                <form method="POST" action="{% url url_arg %}">
+                {% endwith %}
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="input-nombre"
-                                   class="bmd-label-floating">Nombre del
-                                Platillo</label>
+                                   class="bmd-label-floating">{{ tipo|title }}</label>
                             <input type="text" class="form-control"
                                    id="input-nombre" name="input-nombre">
                         </div>
@@ -148,7 +149,7 @@
                                                                     <input class="form-check-input"
                                                                            type="checkbox"
                                                                            name="added-ing[]"
-                                                                           value="{{ ingredient.id }}">
+                                                                           value="{{ receta.id }}">
                                                                     <span class="form-check-sign">
                                       <span class="check"></span>
                                   </span>
@@ -174,7 +175,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">
-                                Anadir
+                                A&ntilde;adir
                             </button>
                             <button type="button" class="btn btn-secondary"
                                     data-dismiss="modal">Cerrar
@@ -189,7 +190,7 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header card-header-primary">
-                    <h4 class="card-title ">Platillos</h4>
+                    <h4 class="card-title ">{{ tipo|title }}s</h4>
                 </div>
                 <div class="card-body">
                     <button class="btn btn-primary btn-round" rel="tooltip"
@@ -203,8 +204,8 @@
                                 <thead class="text-primary">
                                 <tr>
                                     <th>Nombre</th>
-                                    <th>Costo</th>
-                                    <th>Precio</th>
+                                    <th>Costo ($)</th>
+                                    <th>Precio ($)</th>
                                     <th class="text-right">Accion</th>
                                 </tr>
                                 </thead>
@@ -213,7 +214,7 @@
                                 {#TODO collapsable table coluemns#}
                                 {% for platillo in platillos %}
                                     <tr>
-                                        <td>{{ platillo.name }}</td>
+                                        <td>{{ platillo.nombre }}</td>
                                         <td>{{ platillo.costo }}</td>
                                         <td>{{ platillo.precio }}</td>
                                         <td class="td-actions text-right">

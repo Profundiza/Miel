@@ -15,8 +15,9 @@ def analisis(request):
 
 
 def proveedores(request):
+    prov = Proveedor.objects.filter(restaurante__id=request.user.restaurante.id)
     context = {
-        'proveedores': Proveedor.objects.all(),
+        'proveedores': prov,
     }
     return render(request, 'menu/proveedores.html', context)
 
@@ -35,10 +36,14 @@ def add_proveedor(request):
 
 
 def platillos(request):
+    rest = request.user.restaurante
+    plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=False)
     context = {
-        'restaurante': request.user.restaurante,
-        'platillos': Platillo.objects.all(),
-        'ingredientes': Ingrediente.objects.all()
+        'restaurante': rest,
+        'platillos': plats,
+        'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
+        'recetas': Receta.objects.filter(restaurante__id=rest.id),
+        'tipo': 'platillo'
     }
     return render(request, 'menu/platillos.html', context)
 
@@ -49,8 +54,10 @@ def add_platillo(request):
 
     fields = {
         'restaurante': request.user.restaurante,
+        'nombre': request.POST['input-nombre'],
         'costo': request.POST['input-costo'],
         'precio': request.POST['input-precio'],
+        'bebida': 'bebidas' in request.resolver_match.view_name
     }
     platillo = Platillo.objects.create(**fields)
     for ing in mi_ingredientes:
@@ -67,19 +74,33 @@ def add_platillo(request):
             'quantity': request.POST['rec-'+rec.id]
         }
         PlatilloRec.objects.create(**rec_fields)
-    return redirect('menu:platillos')
+
+    if 'bebidas' in request.resolver_match.view_name:
+        redirect_to = 'menu:bebidas'
+    else:
+        redirect_to = 'menu:platillos'
+    return redirect(redirect_to)
 
 
 def bebidas(request):
-    return render(request, 'menu/bebidas.html')
+    rest = request.user.restaurante
+    plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=True)
+    context = {
+        'tipo': 'bebida',
+        'restaurante': rest,
+        'platillos': plats,
+        'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
+        'recetas': Receta.objects.filter(restaurante__id=rest.id)
+    }
+    return render(request, 'menu/platillos.html', context)
 
 
 def ingredientes(request):
     # TODO add current user's restaurant
     context = {
         'restaurante': request.user.restaurante,
-        'ingredientes': Ingrediente.objects.all(),
-        'proveedores': Proveedor.objects.all(),
+        'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
+        'proveedores': Proveedor.objects.filter(restaurante__id=request.user.restaurante.id),
         'medidas': MEDIDAS
     }
     return render(request, 'menu/ingredientes.html', context)
@@ -102,16 +123,14 @@ def add_ingredient(request):
 
 def recetas(request):
     context = {
-        'recetas': Receta.objects.all(),
-        'ingredientes': Ingrediente.objects.all(),
+        'recetas': Receta.objects.filter(restaurante__id=request.user.restaurante.id),
+        'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
         'medidas': MEDIDAS
     }
     return render(request, 'menu/recetas.html', context)
 
 
 def add_receta(request):
-    hi = "hi",
-        # TODO fix ingrediente filter
     mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing'))
     fields = {
         'restaurante': request.user.restaurante,

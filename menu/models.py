@@ -3,6 +3,7 @@ from django.db import models
 
 
 class Restaurante(models.Model):
+    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=100, unique=True)
 
@@ -19,7 +20,7 @@ class CustomUser(AbstractUser):
 
 
 class Proveedor(models.Model):
-    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT, null=True)
+    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     name = models.CharField(max_length=50)
     phone = models.IntegerField()
     sales_rep = models.CharField(max_length=50)
@@ -44,7 +45,7 @@ class Ingrediente(models.Model):
 
 
 class Receta(models.Model):
-    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT, null=True)
+    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     name = models.CharField(max_length=50)
     ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp')
     measurement = models.CharField(max_length=30)
@@ -62,11 +63,16 @@ class RecetaComp(models.Model):
 
 
 class Platillo(models.Model):
-    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT, null=True)
+    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
+    nombre = models.CharField(max_length=100)
     costo = models.FloatField()
     precio = models.FloatField()
     ingredientes = models.ManyToManyField(Ingrediente, through='PlatilloIng')
     recetas = models.ManyToManyField(Receta, through='PlatilloRec')
+    bebida = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.nombre
 
 
 class PlatilloIng(models.Model):
