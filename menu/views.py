@@ -79,10 +79,18 @@ def recetas(request):
 
 def add_receta(request):
     hi = "hi"
+    my_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing'))
     fields = {
-        'restaurante': '',
+        'restaurante': request.user.restaurante,
         'name': request.POST['input-nombre'],
         # TODO fix ingrediente filter
-        'ingredientes': Ingrediente.objects.filter(id in request.POST['input-ingredientes'])
+        'ingredientes': my_ingredientes
     }
+
+    for ing in my_ingredientes:
+        ing_fields = {
+            'restaurante': request.user.restaurante,
+        }
+        RecetaComp.objects.create()
+    Receta.objects.create(**fields)
     return HttpResponseRedirect(reverse('menu:recetas'))

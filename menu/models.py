@@ -4,6 +4,7 @@ from django.db import models
 
 class Restaurante(models.Model):
     name = models.CharField(max_length=100)
+    code = models.CharField(max_length=100)
 
 
 # TODO Move to accounts app

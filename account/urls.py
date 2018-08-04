@@ -7,6 +7,7 @@ app_name = "account"
 
 urlpatterns = [
     url(r'^$', views.account, name='account'),
+    # TODO change url syntax to ?failed
     url(r'^login//?(?P<failed>[-\w\d]+)/?$', views.login_display, name='login_fail'),
     url(r'^login/$', views.login_display, name='login'),
     url(r'^login_submit/$', views.login_submit, name='login_submit'),
