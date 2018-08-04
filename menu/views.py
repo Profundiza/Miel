@@ -55,24 +55,28 @@ def add_platillo(request):
     fields = {
         'restaurante': request.user.restaurante,
         'nombre': request.POST['input-nombre'],
-        'costo': request.POST['input-costo'],
         'precio': request.POST['input-precio'],
         'bebida': 'bebidas' in request.resolver_match.view_name
     }
+    cost = 0
     platillo = Platillo.objects.create(**fields)
     for ing in mi_ingredientes:
+        q = request.POST['ing-'+ing.id]
         ing_fields = {
             'platillo': platillo,
             'ingrediente': ing,
-            'quantity': request.POST['ing-'+ing.id]
+            'quantity': q
         }
+        cost += ing.unit_cost * q
         PlatilloRec.objects.create(**ing_fields)
     for rec in mi_recetas:
+        q = request.POST['rec-'+rec.id]
         rec_fields = {
             'platillo': platillo,
             'receta': rec,
-            'quantity': request.POST['rec-'+rec.id]
+            'quantity': q
         }
+        cost += rec.unit_cost * q
         PlatilloRec.objects.create(**rec_fields)
 
     if 'bebidas' in request.resolver_match.view_name:
@@ -137,9 +141,9 @@ def add_receta(request):
         'name': request.POST['input-nombre'],
         'measurement': request.POST['input-medida'],
         'quantity': request.POST['input-cantidad'],
-        'cost': models.FloatField()
     }
 
+    cost = 0
     receta = Receta.objects.create(**fields)
     for ing in mi_ingredientes:
         ing_fields = {
@@ -147,5 +151,10 @@ def add_receta(request):
             'ingrediente': ing,
             'quantity': request.POST['ing-'+ing.id]
         }
+        cost += ing.cost
         RecetaComp.objects.create(**ing_fields)
+
+    receta.cost = cost
+    receta.save()
+
     return HttpResponseRedirect(reverse('menu:recetas'))

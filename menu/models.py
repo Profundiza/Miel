@@ -39,6 +39,18 @@ class Ingrediente(models.Model):
     cost = models.FloatField(default=0)
     measurement = models.CharField(max_length=30)
     quantity = models.FloatField()
+    unit_cost = models.FloatField(blank=True)
+
+    def get_unit_cost(self):
+        try:
+            uc = self.cost / self.quantity
+        except ZeroDivisionError:
+            uc = 0
+        return uc
+
+    def save(self, *args, **kwargs):
+        self.unit_cost = self.get_unit_cost()
+        super(Ingrediente, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -50,7 +62,19 @@ class Receta(models.Model):
     ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp')
     measurement = models.CharField(max_length=30)
     quantity = models.FloatField()
-    cost = models.FloatField()
+    cost = models.FloatField(blank=True)
+    unit_cost = models.FloatField(blank=True)
+
+    def get_unit_cost(self):
+        try:
+            uc = self.cost / self.quantity
+        except ZeroDivisionError:
+            uc = 0
+        return uc
+
+    def save(self, *args, **kwargs):
+        self.unit_cost = self.get_unit_cost()
+        super(Receta, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.name
