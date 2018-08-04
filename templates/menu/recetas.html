@@ -30,18 +30,21 @@
               {% endfor %}
           </select>
         </div>
-        <div class="form-row">
+      </div>
+    <div class="form-group">
         <label for="input-costo" class="bmd-label-floating">Costo ($)</label>
         <input type="number" class="form-control" id="input-costo" name="input-costo">
       </div>
-      </div>
-        <div class="input-group">
+      <div class="form-group">
+       <div class="input-group">
         <div class="input-group-prepend">
           <span class="input-group-text">
               <i class="material-icons">search</i>
           </span>
         </div>
         <input type="text" class="form-control" id="add-receta-filter" placeholder="Filtrar ingredientes">
+      </div>
+
         {# TODO add button for ingredientes #}
       </div>
       <div class="table-responsive table-wrapper-scroll-y">

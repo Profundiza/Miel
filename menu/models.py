@@ -67,7 +67,6 @@ class Platillo(models.Model):
     precio = models.FloatField()
     ingredientes = models.ManyToManyField(Ingrediente, through='PlatilloIng')
     recetas = models.ManyToManyField(Receta, through='PlatilloRec')
-    tipo = models.CharField(max_length=30)
 
 
 class PlatilloIng(models.Model):
