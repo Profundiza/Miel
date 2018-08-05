@@ -151,8 +151,7 @@
                                                         <td><input
                                                                 type="number"
                                                                 class="form-control"
-                                                                name="ing-{{ receta.id }}"
-                                                                value="0" /></td>
+                                                                name="rec-{{ receta.id }}" /></td>
                                                         <td>{{ receta.measurement }}</td>
                                                     </tr>
                                                 {% endfor %}
@@ -183,20 +182,24 @@
                     <h4 class="card-title ">{{ tipo|title }}s</h4>
                 </div>
                 <div class="card-body">
-                    <button class="btn btn-primary btn-round" rel="tooltip"
-                            data-toggle="modal" data-target="#add-prov"><i
+                    <form method="POST" action="{% url 'menu:platillos_delete' %}">
+                        {% csrf_token %}
+                        <input hidden name="current-plat" value="{{ platillo.id }}" />
+                    <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
+                    <button class="btn btn-primary right" data-toggle="modal" data-target="#add-prov"><i
                             class="material-icons">add</i></button>
                     {% if recetas.count == 0 %}
                         No hay ningun recetas.
                     {% else %}
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-striped">
                                 <thead class="text-primary">
                                 <tr>
+                                    <th></th>
                                     <th>Nombre</th>
-                                    <th>Costo ($)</th>
-                                    <th>Precio ($)</th>
-                                    <th class="text-right">Accion</th>
+                                    <th>Costo</th>
+                                    <th>Precio</th>
+                                    <th class="text-right">Acci&oacute;n</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -204,9 +207,10 @@
                                 {#TODO collapsable table coluemns#}
                                 {% for platillo in platillos %}
                                     <tr>
+                                    <td><input type="checkbox" name="plat-del[]" value="{{ platillo.id }}"/></td>
                                         <td>{{ platillo.nombre }}</td>
-                                        <td>{{ platillo.costo }}</td>
-                                        <td>{{ platillo.precio }}</td>
+                                        <td>${{ platillo.costo }}</td>
+                                        <td>${{ platillo.precio }}</td>
                                         <td class="td-actions text-right">
                                             <button type="button" rel="tooltip"
                                                     class="btn btn-info">
@@ -216,10 +220,6 @@
                                                     class="btn btn-success">
                                                 <i class="material-icons">edit</i>
                                             </button>
-                                            <button type="button" rel="tooltip"
-                                                    class="btn btn-danger">
-                                                <i class="material-icons">close</i>
-                                            </button>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -227,6 +227,7 @@
                             </table>
                         </div>
                     {% endif %}
+                    </form>
                 </div>
             </div>
         </div>

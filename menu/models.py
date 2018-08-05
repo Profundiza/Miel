@@ -100,9 +100,12 @@ class Platillo(models.Model):
 
 
 class PlatilloIng(models.Model):
-    platillo = models.ForeignKey(Platillo, on_delete=models.PROTECT)
+    platillo = models.ForeignKey(Platillo, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     quantity = models.FloatField()
+
+    def __str__(self):
+        return self.platillo.nombre + " " + self.ingrediente.name
 
 
 class PlatilloRec(models.Model):

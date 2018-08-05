@@ -88,6 +88,12 @@ def add_platillo(request):
     return redirect(redirect_to)
 
 
+def del_platillo(request):
+    for _id in request.POST.getlist('plat-del[]'):
+        Platillo.objects.get(id=_id).delete()
+    return redirect('menu:bebidas' if 'bebidas' in request.resolver_match.view_name else 'menu:platillos')
+
+
 def bebidas(request):
     rest = request.user.restaurante
     plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=True)
@@ -127,6 +133,12 @@ def add_ingredient(request):
     return HttpResponseRedirect(reverse('menu:ingredientes'))
 
 
+def del_ingredient(request):
+    for _id in request.POST.getlist('ing-del[]'):
+        Ingrediente.objects.get(id=_id).delete()
+    return redirect('menu:ingredientes')
+
+
 def recetas(request):
     context = {
         'recetas': Receta.objects.filter(restaurante__id=request.user.restaurante.id),
@@ -160,3 +172,9 @@ def add_receta(request):
     receta.save()
 
     return HttpResponseRedirect(reverse('menu:recetas'))
+
+
+def del_receta(request):
+    for _id in request.POST.getlist('rec-del[]'):
+        Receta.objects.get(id=_id).delete()
+    return redirect('menu:recetas')

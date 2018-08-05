@@ -26,6 +26,7 @@ SECRET_KEY = '21wyid7c7*lptsde03pfhxr$nyrq^(b^cbfksc&)e#68q)*bz2'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     'miel-tech.herokuapp.com'
 ]
 

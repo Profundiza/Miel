@@ -93,14 +93,18 @@
           <h4 class="card-title ">Recetas</h4>
         </div>
     <div class="card-body">
-    <button class="btn btn-primary btn-round" rel="tooltip" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
+    <form method="POST" action="{% url 'menu:recetas_delete' %}">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
     {% if recetas.count == 0 %}
     No hay ningun recetas.
     {% else %}
     <div class="table-responsive">
-        <table class="table">
+        <table class="table table-striped">
             <thead class="text-primary">
                 <tr>
+                    <th></th>
                     <th>Nombre</th>
                     <th>Costo</th>
                     <th class="text-right">Accion</th>
@@ -110,7 +114,9 @@
             {#TODO make table more narrow, expand to modal for more information#}
             {#TODO collapsable table coluemns#}
             {% for receta in recetas %}
-                <tr><td>{{ receta.name }}</td>
+                <tr>
+                <td><input type="checkbox" name="rec-del[]" value="{{ receta.id }}" /></td>
+                <td>{{ receta.name }}</td>
                 <td>{{ receta.cost }}</td>
                 <td class="td-actions text-right">
                     <button type="button" rel="tooltip" class="btn btn-info">
@@ -119,15 +125,13 @@
                     <button type="button" rel="tooltip" class="btn btn-success">
                         <i class="material-icons">edit</i>
                     </button>
-                    <button type="button" rel="tooltip" class="btn btn-danger">
-                        <i class="material-icons">close</i>
-                    </button>
                 </td></tr>
             {% endfor %}
             </tbody>
             </table>
         </div>
     {% endif %}
+    </form>
     </div>
   </div>
 </div>
