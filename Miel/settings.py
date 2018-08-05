@@ -25,7 +25,9 @@ SECRET_KEY = '21wyid7c7*lptsde03pfhxr$nyrq^(b^cbfksc&)e#68q)*bz2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'miel-tech.herokuapp.com'
+]
 
 
 # Application definition
