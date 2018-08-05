@@ -39,12 +39,12 @@ class Ingrediente(models.Model):
     cost = models.FloatField(default=0)
     measurement = models.CharField(max_length=30)
     quantity = models.FloatField()
-    unit_cost = models.FloatField(blank=True)
+    unit_cost = models.FloatField(null=True)
 
     def get_unit_cost(self):
         try:
             uc = self.cost / self.quantity
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             uc = 0
         return uc
 
@@ -62,13 +62,13 @@ class Receta(models.Model):
     ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp')
     measurement = models.CharField(max_length=30)
     quantity = models.FloatField()
-    cost = models.FloatField(blank=True)
-    unit_cost = models.FloatField(blank=True)
+    cost = models.FloatField(null=True)
+    unit_cost = models.FloatField(null=True)
 
     def get_unit_cost(self):
         try:
             uc = self.cost / self.quantity
-        except ZeroDivisionError:
+        except (ZeroDivisionError, TypeError):
             uc = 0
         return uc
 
@@ -89,7 +89,7 @@ class RecetaComp(models.Model):
 class Platillo(models.Model):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=100)
-    costo = models.FloatField()
+    costo = models.FloatField(null=True)
     precio = models.FloatField()
     ingredientes = models.ManyToManyField(Ingrediente, through='PlatilloIng')
     recetas = models.ManyToManyField(Receta, through='PlatilloRec')

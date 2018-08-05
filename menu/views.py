@@ -49,8 +49,8 @@ def platillos(request):
 
 
 def add_platillo(request):
-    mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing'))
-    mi_recetas = Receta.objects.filter(pk__in=request.POST.getlist('added-rec'))
+    mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing[]'))
+    mi_recetas = Receta.objects.filter(pk__in=request.POST.getlist('added-rec[]'))
 
     fields = {
         'restaurante': request.user.restaurante,
@@ -61,16 +61,16 @@ def add_platillo(request):
     cost = 0
     platillo = Platillo.objects.create(**fields)
     for ing in mi_ingredientes:
-        q = request.POST['ing-'+ing.id]
+        q = float(request.POST['ing-'+str(ing.id)])
         ing_fields = {
             'platillo': platillo,
             'ingrediente': ing,
             'quantity': q
         }
         cost += ing.unit_cost * q
-        PlatilloRec.objects.create(**ing_fields)
+        PlatilloIng.objects.create(**ing_fields)
     for rec in mi_recetas:
-        q = request.POST['rec-'+rec.id]
+        q = float(request.POST['rec-'+str(rec.id)])
         rec_fields = {
             'platillo': platillo,
             'receta': rec,
@@ -78,6 +78,8 @@ def add_platillo(request):
         }
         cost += rec.unit_cost * q
         PlatilloRec.objects.create(**rec_fields)
+    platillo.costo = cost
+    platillo.save()
 
     if 'bebidas' in request.resolver_match.view_name:
         redirect_to = 'menu:bebidas'
@@ -135,7 +137,7 @@ def recetas(request):
 
 
 def add_receta(request):
-    mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing'))
+    mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing[]'))
     fields = {
         'restaurante': request.user.restaurante,
         'name': request.POST['input-nombre'],
@@ -149,7 +151,7 @@ def add_receta(request):
         ing_fields = {
             'receta': receta,
             'ingrediente': ing,
-            'quantity': request.POST['ing-'+ing.id]
+            'quantity': request.POST['ing-'+str(ing.id)]
         }
         cost += ing.cost
         RecetaComp.objects.create(**ing_fields)
