@@ -2,6 +2,7 @@
 {% block title %}Analisis{% endblock %}
 {% block content %}
 {% include "menu/menu_tabs.html" %}
+{% load myfilters %}
 <div class="row">
 	<div class="col-lg-6 col-md-12">
 		<div class="card">
@@ -9,6 +10,7 @@
 			<h4 class="card-title">Mejores 5 Platillos por Ganancia</h4>
 		</div>
 		<div class="card-body table-responsive">
+        
 			<table class="table table-hover">
 				<thead class="text-info">
 				<tr><th></th>
@@ -16,12 +18,11 @@
 				<th>Ganancia</th>
 				</tr></thead>
 				<tbody>
-					{% load myfilters %}
 					{% for platillo in platillosgood %}
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ platillo.nombre }}</td>
-					<td>{{ platillo.ganancia|percentage }}</td>
+					<td>{{ platillo.ganancia|currency }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -42,12 +43,11 @@
 				<th>Ganancia</th>
 				</tr></thead>
 				<tbody>
-					{% load myfilters %}
 					{% for platillo in platillosbad %}
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ platillo.nombre }}</td>
-					<td>{{ platillo.ganancia|percentage }}</td>
+					<td>{{ platillo.ganancia|currency }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -70,12 +70,11 @@
 				<th>Ganancia</th>
 				</tr></thead>
 				<tbody>
-					{% load myfilters %}
 					{% for bebida in bebidasgood %}
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ bebida.nombre }}</td>
-					<td>{{ bebida.ganancia|percentage }}</td>
+					<td>{{ bebida.ganancia|currency }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -96,12 +95,11 @@
 				<th>Ganancia</th>
 				</tr></thead>
 				<tbody>
-					{% load myfilters %}
 					{% for bebida in bebidasbad %}
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ bebida.nombre }}</td>
-					<td>{{ bebida.ganancia|percentage }}</td>
+					<td>{{ bebida.ganancia|currency }}</td>
 					</tr>
 					{% endfor %}
 				</tbody>
