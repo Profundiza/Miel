@@ -11,7 +11,7 @@ class AuthRequiredMiddleware(object):
         # the view (and later middleware) are called.
 
         response = self.get_response(request)
-        if request.user and not request.user.is_authenticated and 'login' not in request.resolver_match.view_name:
+        if hasattr(request, 'user') and not request.user.is_authenticated and 'login' not in request.resolver_match.view_name:
             return HttpResponseRedirect(reverse('account:login'))
 
         # Code to be executed for each request/response after
