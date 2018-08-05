@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='receta',
-            name='cost',
+            name='costo',
             field=models.FloatField(default=0),
             preserve_default=False,
         ),

@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterField(
             model_name='receta',
-            name='cost',
+            name='costo',
             field=models.FloatField(null=True),
         ),
         migrations.AlterField(

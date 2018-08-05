@@ -11,49 +11,45 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <form method="POST" action="{% url 'menu:ingredientes_add' %}">
+      <form method="POST" action="{% url 'menu:ingredientes' %}">
       {% csrf_token %}
       <div class="modal-body">
+      {% load myfilters %}
       <div class="form-row">
           <div class="col-6 form-group">
-             <label for="input-nombre" class="bmd-label-floating">Ingrediente</label>
-             <input type="text" class="form-control" id="input-nombre" name="input-nombre">
+             {{ form.nombre.label_tag }}
+             {{ form.nombre|addclass:'form-control' }}
           </div>
           <div class="col-6 form-group">
-            <label for="input-marca" class="bmd-label-floating">Marca</label>
-             <input type="text" class="form-control" id="input-marca" name="input-marca">
+             {{ form.marca.label_tag }}
+             {{ form.marca|addclass:'form-control' }}
           </div>
       </div>
       <div class="form-row">
-      <div class="form-group col-10">
-        <label for="input-proveedor" class="bmd-label-floating">Proveedor</label>
-          <select id="input-proveedor" class="form-control" name="input-proveedor">
+      <div class="form-group col-3">
+        <label for="input-proveedor">Proveedor:</label>
+
+      </div>
+      <div class="form-group col-9">
+         <select id="input-proveedor" class="form-control" name="input-proveedor">
               {% for proveedor in proveedores %}
-              <option value="{{ proveedor.id }}">{{ proveedor.name }}</option>
+              <option value="{{ proveedor.id }}">{{ proveedor.nombre }}</option>
               {% endfor %}
           </select>
-      </div>
-      <div class="col-2">
-          {# TODO change button to a circle shape #}
-      <a href="{% url 'menu:proveedores' %}" class="btn btn-round"><i class="material-icons">add</i></a>
       </div>
       </div>
       <div class="form-row">
           <div class="form-group col-6">
-            <label for="input-cantidad" class="bmd-label-floating">Cantidad</label>
-            <input type="number" class="form-control" id="input-cantidad" name="input-cantidad">
+             {{ form.cantidad.label_tag }}
+             {{ form.cantidad|addclass:'form-control' }}
           </div>
         <div class="form-group col-6" style="margin-top: 0;">
-          <select id="input-medida" name="input-medida" class="form-control">
-              {% for medida in medidas %}
-              <option value="{{ medida }}">{{ medida }}</option>
-              {% endfor %}
-          </select>
+          {{ form.medida|addclass:'form-control' }}
         </div>
       </div>
       <div class="form-group">
-        <label for="input-costo" class="bmd-label-floating">Costo</label>
-        <input type="number" class="form-control" id="input-costo" name="input-costo">
+         {{ form.costo.label_tag }}
+         {{ form.costo|addclass:'form-control' }}
       </div>
       </div>
       <div class="modal-footer">
@@ -74,7 +70,7 @@
     <form method="POST" action="{% url 'menu:ingredientes_delete' %}">
     {% csrf_token %}
     <button class="btn btn-danger"><i class="material-icons">delete</i></button>
-    <button class="btn btn-primary" data-toggle="modal" data-target="#add-ing"><i class="material-icons">add</i></button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-ing"><i class="material-icons">add</i></button>
     {% if ingredientes.count == 0 %}
     No hay ningun ingredientes.
     {% else %}
@@ -95,11 +91,20 @@
             {#TODO collapsable table columns#}
             {% for ingredient in ingredientes %}
                 <tr>
-                <td><input type="checkbox" name="ing-del[]" value="{{ ingredient.id }}" /></td>
-                <td>{{ ingredient.name }}</td>
-                <td>{{ ingredient.brand }}</td>
+                <td>
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input class="form-check-input" type="checkbox" name="ing-del[]" value="{{ ingredient.id }}" >
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                    </div>
+                </td>
+                <td>{{ ingredient.nombre }}</td>
+                <td>{{ ingredient.marca }}</td>
                 <td>{{ ingredient.proveedor }}</td>
-                <td>${{ ingredient.unit_cost }}/{{ ingredient.measurement }}</td>
+                <td>${{ ingredient.unit_cost }}/{{ ingredient.medida }}</td>
                 <td class="td-actions text-right">
                     <button type="button" rel="tooltip" class="btn btn-success ing-edit">
                         <i class="material-icons">edit</i>

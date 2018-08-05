@@ -1,16 +1,35 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse
+from django.views.generic import UpdateView
 
+from menu.forms import *
 from .models import *
 
-# TODO medidas editable in admin
-# TODO constants file
-MEDIDAS = ['oz', 'lb', 'gal', 'L', 'mL', 'g', 'kg', 'unit', 'dozen']
+
+class RecetaUpdateView(UpdateView):
+    model = Receta
+    form_class = RecetaForm
+    template_name = 'menu/receta_edit_form.html'
+
+    def dispatch(self, *args, **kwargs):
+        self.item_id = kwargs['pk']
+        return super(RecetaUpdateView, self).dispatch(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        item = Receta.objects.get(id=self.item_id)
+        return HttpResponse(render_to_string('menu/receta_edit_form_success.html', {'item': item}))
 
 
 def analisis(request):
-    context = {}
+    context = {
+        'platillosgood': Platillo.objects.filter(bebida=False).order_by('-ganancia')[:5],
+        'platillosbad': Platillo.objects.filter(bebida=False).order_by('ganancia')[:5],
+        'bebidasgood': Platillo.objects.filter(bebida=True).order_by('-ganancia')[:5],
+        'bebidasbad': Platillo.objects.filter(bebida=True).order_by('ganancia')[:5]
+    }
     return render(request, 'menu/analisis.html', context)
 
 
@@ -25,67 +44,69 @@ def proveedores(request):
 def add_proveedor(request):
     fields = {
         'restaurante': request.user.restaurante,
-        'name': request.POST['input-nombre'],
-        'phone': request.POST['input-phone'],
-        'sales_rep': request.POST['input-rep'],
-        'sales_rep_phone': request.POST['input-rep_phone'],
-        'email': request.POST['input-email'],
+        'nombre': request.POST['input-nombre'],
+        'telefono': request.POST['input-phone'],
+        'representante': request.POST['input-rep'],
+        'telefono_de_representante': request.POST['input-rep_phone'],
+        'correo_electronico': request.POST['input-email'],
     }
     Proveedor.objects.create(**fields)
     return HttpResponseRedirect(reverse('menu:proveedores'))
 
 
 def platillos(request):
-    rest = request.user.restaurante
-    plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=False)
-    context = {
-        'restaurante': rest,
-        'platillos': plats,
-        'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
-        'recetas': Receta.objects.filter(restaurante__id=rest.id),
-        'tipo': 'platillo'
-    }
-    return render(request, 'menu/platillos.html', context)
+    if request.method == "POST":
+        mi_ingredientes = Ingrediente.objects.filter(
+            pk__in=request.POST.getlist('added-ing[]'))
+        mi_recetas = Receta.objects.filter(
+            pk__in=request.POST.getlist('added-rec[]'))
 
-
-def add_platillo(request):
-    mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing[]'))
-    mi_recetas = Receta.objects.filter(pk__in=request.POST.getlist('added-rec[]'))
-
-    fields = {
-        'restaurante': request.user.restaurante,
-        'nombre': request.POST['input-nombre'],
-        'precio': request.POST['input-precio'],
-        'bebida': 'bebidas' in request.resolver_match.view_name
-    }
-    cost = 0
-    platillo = Platillo.objects.create(**fields)
-    for ing in mi_ingredientes:
-        q = float(request.POST['ing-'+str(ing.id)])
-        ing_fields = {
-            'platillo': platillo,
-            'ingrediente': ing,
-            'quantity': q
+        fields = {
+            'restaurante': request.user.restaurante,
+            'nombre': request.POST['nombre'],
+            'precio': request.POST['precio'],
+            'bebida': 'bebidas' in request.resolver_match.view_name
         }
-        cost += ing.unit_cost * q
-        PlatilloIng.objects.create(**ing_fields)
-    for rec in mi_recetas:
-        q = float(request.POST['rec-'+str(rec.id)])
-        rec_fields = {
-            'platillo': platillo,
-            'receta': rec,
-            'quantity': q
-        }
-        cost += rec.unit_cost * q
-        PlatilloRec.objects.create(**rec_fields)
-    platillo.costo = cost
-    platillo.save()
+        cost = 0
+        platillo = Platillo.objects.create(**fields)
+        for ing in mi_ingredientes:
+            q = float(request.POST['ing-' + str(ing.id)])
+            ing_fields = {
+                'platillo': platillo,
+                'ingrediente': ing,
+                'cantidad': q
+            }
+            cost += ing.unit_cost * q
+            PlatilloIng.objects.create(**ing_fields)
+        for rec in mi_recetas:
+            q = float(request.POST['rec-' + str(rec.id)])
+            rec_fields = {
+                'platillo': platillo,
+                'receta': rec,
+                'cantidad': q
+            }
+            cost += rec.unit_cost * q
+            PlatilloRec.objects.create(**rec_fields)
+        platillo.costo = cost
+        platillo.save()
 
-    if 'bebidas' in request.resolver_match.view_name:
-        redirect_to = 'menu:bebidas'
+        if 'bebidas' in request.resolver_match.view_name:
+            redirect_to = 'menu:bebidas'
+        else:
+            redirect_to = 'menu:platillos'
+        return redirect(redirect_to)
     else:
-        redirect_to = 'menu:platillos'
-    return redirect(redirect_to)
+        rest = request.user.restaurante
+        plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=False)
+        context = {
+            'restaurante': rest,
+            'platillos': plats,
+            'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
+            'recetas': Receta.objects.filter(restaurante__id=rest.id),
+            'tipo': 'platillo',
+            'form': PlatilloForm(),
+        }
+        return render(request, 'menu/platillos.html', context)
 
 
 def del_platillo(request):
@@ -98,39 +119,38 @@ def bebidas(request):
     rest = request.user.restaurante
     plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=True)
     context = {
-        'tipo': 'bebida',
         'restaurante': rest,
         'platillos': plats,
         'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
-        'recetas': Receta.objects.filter(restaurante__id=rest.id)
+        'recetas': Receta.objects.filter(restaurante__id=rest.id),
+        'tipo': 'bebida',
+        'form': PlatilloForm(),
     }
     return render(request, 'menu/platillos.html', context)
 
 
 def ingredientes(request):
-    # TODO add current user's restaurant
-    context = {
-        'restaurante': request.user.restaurante,
-        'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
-        'proveedores': Proveedor.objects.filter(restaurante__id=request.user.restaurante.id),
-        'medidas': MEDIDAS
-    }
-    return render(request, 'menu/ingredientes.html', context)
-
-
-def add_ingredient(request):
-    # TODO add current user's restaurant
-    fields = {
-        'restaurante': request.user.restaurante,
-        'name': request.POST['input-nombre'],
-        'brand': request.POST['input-marca'],
-        'proveedor': Proveedor.objects.get(id=request.POST['input-proveedor']),
-        'cost': request.POST['input-costo'],
-        'measurement': request.POST['input-medida'],
-        'quantity': request.POST['input-cantidad']
-    }
-    Ingrediente.objects.create(**fields)
-    return HttpResponseRedirect(reverse('menu:ingredientes'))
+    if request.method == "POST":
+        fields = {
+            'restaurante': request.user.restaurante,
+            'nombre': request.POST['nombre'],
+            'marca': request.POST['marca'],
+            'proveedor': Proveedor.objects.get(
+                id=request.POST['input-proveedor']),
+            'costo': request.POST['costo'],
+            'medida': request.POST['medida'],
+            'cantidad': request.POST['cantidad']
+        }
+        Ingrediente.objects.create(**fields)
+        return redirect('menu:ingredientes')
+    else:
+        context = {
+            'restaurante': request.user.restaurante,
+            'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
+            'proveedores': Proveedor.objects.filter(restaurante__id=request.user.restaurante.id),
+            'form': IngredienteForm(),
+        }
+        return render(request, 'menu/ingredientes.html', context)
 
 
 def del_ingredient(request):
@@ -140,41 +160,46 @@ def del_ingredient(request):
 
 
 def recetas(request):
-    context = {
-        'recetas': Receta.objects.filter(restaurante__id=request.user.restaurante.id),
-        'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
-        'medidas': MEDIDAS
-    }
-    return render(request, 'menu/recetas.html', context)
-
-
-def add_receta(request):
-    mi_ingredientes = Ingrediente.objects.filter(pk__in=request.POST.getlist('added-ing[]'))
-    fields = {
-        'restaurante': request.user.restaurante,
-        'name': request.POST['input-nombre'],
-        'measurement': request.POST['input-medida'],
-        'quantity': request.POST['input-cantidad'],
-    }
-
-    cost = 0
-    receta = Receta.objects.create(**fields)
-    for ing in mi_ingredientes:
-        ing_fields = {
-            'receta': receta,
-            'ingrediente': ing,
-            'quantity': request.POST['ing-'+str(ing.id)]
+    if request.method == "POST":
+        mi_ingredientes = Ingrediente.objects.filter(
+            pk__in=request.POST.getlist('added-ing[]'))
+        fields = {
+            'restaurante': request.user.restaurante,
+            'nombre': request.POST['nombre'],
+            'medida': request.POST['medida'],
+            'cantidad': request.POST['cantidad'],
         }
-        cost += ing.cost
-        RecetaComp.objects.create(**ing_fields)
 
-    receta.cost = cost
-    receta.save()
+        cost = 0
+        receta = Receta.objects.create(**fields)
+        for ing in mi_ingredientes:
+            ing_fields = {
+                'receta': receta,
+                'ingrediente': ing,
+                'cantidad': request.POST['ing-' + str(ing.id)]
+            }
+            cost += ing.costo
+            RecetaComp.objects.create(**ing_fields)
 
-    return HttpResponseRedirect(reverse('menu:recetas'))
+        receta.costo = cost
+        receta.save()
+
+        return HttpResponseRedirect(reverse('menu:recetas'))
+    else:
+        form = RecetaForm()
+        context = {
+            'recetas': Receta.objects.filter(restaurante__id=request.user.restaurante.id),
+            'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
+            'form': form
+        }
+        return render(request, 'menu/recetas.html', context)
 
 
 def del_receta(request):
     for _id in request.POST.getlist('rec-del[]'):
         Receta.objects.get(id=_id).delete()
+    return redirect('menu:recetas')
+
+
+def edit_receta(request, pk):
     return redirect('menu:recetas')

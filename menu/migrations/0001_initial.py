@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('brand', models.CharField(default='temp', max_length=50)),
-                ('cost', models.FloatField(default=0)),
+                ('costo', models.FloatField(default=0)),
                 ('measurement', models.CharField(max_length=30)),
                 ('quantity', models.FloatField()),
             ],

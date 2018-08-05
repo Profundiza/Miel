@@ -12,5 +12,7 @@ $(document).ready(function(){
     $(".nav-link").not(this).removeClass('active');
     $($(this).attr('href')).show();
     $(".tab-pane").not($(this).attr('href')).hide();
-  })
+  });
+  //$(".form-group input").addClass('form-control');
+  //$(".form-group label").addClass('bmd-label-floating');
 });
