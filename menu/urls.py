@@ -9,7 +9,6 @@ app_name = "menu"
 urlpatterns = [
     url(r'^$', views.analisis, name='main'),
     url(r'^proveedores/$', views.proveedores, name='proveedores'),
-    url(r'^proveedores/anadir/$', views.add_proveedor, name='proveedores_add'),
     url(r'^platillos/$', views.platillos, name='platillos'),
     url(r'^platillos/suprimir/$', views.del_platillo, name='platillos_delete'),
     url(r'^bebidas/$', views.bebidas, name='bebidas'),

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from django.contrib.auth.models import User, Group, AbstractUser
 from django.db import models
 
@@ -22,10 +24,10 @@ class CustomUser(AbstractUser):
 class Proveedor(models.Model):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=50)
-    telefono = models.IntegerField()
+    telefono = models.IntegerField(verbose_name='Teléfono')
     representante = models.CharField(max_length=50)
-    telefono_de_representante = models.IntegerField()
-    correo_electronico = models.EmailField()
+    telefono_de_representante = models.IntegerField(verbose_name='Teléfono de representante')
+    correo_electronico = models.EmailField(verbose_name='Correo electrónico')
 
     def __str__(self):
         return self.nombre

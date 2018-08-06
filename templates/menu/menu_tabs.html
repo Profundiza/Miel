@@ -5,7 +5,7 @@
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:main" %}active{% endif %}" href="{% url 'menu:main' %}">An&aacute;lisis</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:proveedores" %}active{% endif %}" href="{% url 'menu:proveedores' %}">Proveedores</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:ingredientes" %}active{% endif %}" href="{% url 'menu:ingredientes' %}">Ingredientes</a></li>
-    <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:recetas" %}active{% endif %}" href="{% url 'menu:recetas' %}">Recetas</a></li>
+    <li class="nav-item"><a class="nav-link {% if "recetas" in request.resolver_match.view_name %}active{% endif %}" href="{% url 'menu:recetas' %}">Recetas</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:platillos" %}active{% endif %}" href="{% url 'menu:platillos' %}">Platillos</a></li>
     <li class="nav-item"><a class="nav-link {% if request.resolver_match.view_name == "menu:bebidas" %}active{% endif %}" href="{% url 'menu:bebidas' %}">Bebidas</a></li>
 </ul>

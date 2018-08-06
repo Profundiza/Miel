@@ -34,24 +34,24 @@ def analisis(request):
 
 
 def proveedores(request):
-    prov = Proveedor.objects.filter(restaurante__id=request.user.restaurante.id)
-    context = {
-        'proveedores': prov,
-    }
-    return render(request, 'menu/proveedores.html', context)
-
-
-def add_proveedor(request):
-    fields = {
-        'restaurante': request.user.restaurante,
-        'nombre': request.POST['input-nombre'],
-        'telefono': request.POST['input-phone'],
-        'representante': request.POST['input-rep'],
-        'telefono_de_representante': request.POST['input-rep_phone'],
-        'correo_electronico': request.POST['input-email'],
-    }
-    Proveedor.objects.create(**fields)
-    return HttpResponseRedirect(reverse('menu:proveedores'))
+    if request.method == "POST":
+        fields = {
+            'restaurante': request.user.restaurante,
+            'nombre': request.POST['nombre'],
+            'telefono': request.POST['telefono'],
+            'representante': request.POST['representante'],
+            'telefono_de_representante': request.POST['telefono_de_representante'],
+            'correo_electronico': request.POST['correo_electronico'],
+        }
+        Proveedor.objects.create(**fields)
+        return HttpResponseRedirect(reverse('menu:proveedores'))
+    else:
+        prov = Proveedor.objects.filter(restaurante__id=request.user.restaurante.id)
+        context = {
+            'proveedores': prov,
+            'form': ProveedorForm(),
+        }
+        return render(request, 'menu/proveedores.html', context)
 
 
 def platillos(request):

@@ -1,42 +1,90 @@
-<div class="modal-dialog modal-lg">
-    <div class="modal-content">
-        <form id="item_update_form" method='post' class="form" role="form" action=''>
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title" id="myModalLabel">Item {{ item.id }}</h4>
-              </div>
-              <div class="modal-body">
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
+{% extends 'base.html' %}
+{% block content %}
+    {% include 'menu/menu_tabs.html' %}
+    <div class="row">
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title ">Cambiar Receta</h4>
+            <a class="btn btn-info" href="{% url 'menu:recetas' %}">
+                <i class="material-icons">exit</i>
+            </a>
+        </div>
+        <div class="card-body">
+            <form id="item_update_form" method='post' class="form" role="form" action=''>
+                {% csrf_token %}{% load myfilters %}
+                {{ form.non_field_errors }}
+                <div class="form-group">
+                {% for field in form %}
                     <div class="form-group">
-                    {% for field in form %}
-                        <div class="form-group">
-                            {% if field.errors %}
-                                <ul class="form-errors">
-                                {% for error in field.errors %}
-                                    <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
-                                {% endfor %}
-                                </ul>
-                            {% endif %}
-                            {{ field.label_tag }} {{ field }}
-                            {% if field.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
-                        </div>
-                    {% endfor %}
+                        {% if field.errors %}
+                            <ul class="form-errors">
+                            {% for error in field.errors %}
+                                <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
+                            {% endfor %}
+                            </ul>
+                        {% endif %}
+                        {{ field.label_tag }} {{ field|addclass:'form-control' }}
+                        {% if field.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
                     </div>
-              </div>
-              <div class="modal-footer">
-                <input type="button" class="btn btn-default" data-dismiss="modal" value="annulla" />
-                <input type="submit" class="btn btn-primary" value="save" style="margin-bottom: 5px;" />
-              </div>
-        </form>
-        <script>
-            {#jQuery('.modal-content .calendar').datepicker({ dateFormat: "yy-mm-dd" });#}
-            {#    alert('here');#}
-            {#    var form_options = {#}
-            {#        target: '.modal-content',#}
-            {#        success: function() {  }#}
-            {#    }#}
-            {#    $('#item_update_form').ajaxForm(form_options);#}
-        </script>
-    </div><!-- /.modal-content -->
-</div><!-- /.modal-dialog -->
+                {% endfor %}
+                </div>
+            <div class="row">
+                <div class="col-md-5">
+                <div class="table-responsive table-wrapper-scroll-y">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                    <th>Ingrediente</th>
+                    <th>Costo</th>
+                    <th>Cantidad</th>
+                    <th>Medida</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ing in ingredientes %}
+                        <tr>
+                        <td>{{ ing.nombre }}</td>
+                        <td>{{ ing.unit_cost|currency }}/{{ ing.medida }}</td>
+                        <td><input type="number" class="form-control" name="ing-"{{ ing.id }} /></td>
+                        <td>{{ ing.medida }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+                </div>
+            <div class="col-md-2">
+                <button class="btn btn-default"><span class="material-icons">import_export</span></button>
+            </div>
+                <div class="col-md-5">
+                <div class="table-responsive table-wrapper-scroll-y">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                    <th>Ingrediente</th>
+                    <th>Costo</th>
+                    <th>Cantidad</th>
+                    <th>Medida</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for ing in ingredientes %}
+                        <tr>
+                        <td>{{ ing.nombre }}</td>
+                        <td>{{ ing.unit_cost|currency }}/{{ ing.medida }}</td>
+                        <td><input type="number" class="form-control" name="ing-"{{ ing.id }} /></td>
+                        <td>{{ ing.medida }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+                </div>
+            </div>
+x
+            </form>
+        </div>
+    </div>
+    </div>
+
+{% endblock %}

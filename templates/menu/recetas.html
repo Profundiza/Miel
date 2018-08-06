@@ -44,7 +44,7 @@
           <table class="table table-condensed table-filter" id="add-receta-table">
               <thead>
                 <tr class="table-head">
-                    <th>Used</th>
+                    <th>Usado</th>
                     <th>Ingrediente</th>
                     <th>Costo</th>
                     <th>Cantidad</th>
@@ -216,7 +216,7 @@
                     <button type="button" rel="tooltip" class="btn btn-info">
                         <i class="material-icons">remove_red_eye</i>
                     </button>
-                    <a type="button" rel="tooltip" class="btn btn-success rec-edit-modal" href="#" data-form="{% url 'menu:recetas_edit' receta.pk %}" >
+                    <a rel="tooltip" class="btn btn-success" href="{% url 'menu:recetas_view' receta.pk %}" >
                         <i class="material-icons">edit</i>
                     </a>
                 </td></tr>
