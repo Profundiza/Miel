@@ -70,7 +70,7 @@
     <form method="POST" action="{% url 'menu:ingredientes_delete' %}">
     {% csrf_token %}
     <button class="btn btn-danger"><i class="material-icons">delete</i></button>
-    <a class="btn btn-info" type="button" href="{% url 'menu:ingredientes_export' %}"><i class="material-icons">get_app</i></a>
+    <a class="btn btn-info" type="button" href="{% url 'menu:export' %}"><i class="material-icons">get_app</i></a>
     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-ing"><i class="material-icons">add</i></button>
     {% if ingredientes.count == 0 %}
     No hay ning&uacute;n ingredientes.

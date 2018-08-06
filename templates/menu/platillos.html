@@ -186,11 +186,11 @@
                         {% csrf_token %}
                         <input hidden name="current-plat" value="{{ platillo.id }}" />
                         <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
-                        <button class="btn btn-info" type="button"><i class="material-icons">get_app</i></button>
+                        <a class="btn btn-info" href="{% url 'menu:export' %}"><i class="material-icons">get_app</i></a>
                         <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-prov"><i
                             class="material-icons">add</i></button>
                     {% if recetas.count == 0 %}
-                        No hay ningun recetas.
+                        No hay ning&uacute;n recetas.
                     {% else %}
                         <div class="table-responsive">
                             <table class="table table-striped">
