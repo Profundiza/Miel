@@ -20,9 +20,9 @@ def export(request):
     for proveedor in proveedores:
         ws_prov.append([
             proveedor.nombre,
-            proveedor.telefono,
+            str(proveedor.telefono),
             proveedor.representante,
-            proveedor.telefono_de_representante,
+            str(proveedor.telefono_de_representante),
             proveedor.correo_electronico])
 
     ingredientes = Ingrediente.objects.filter(restaurante_id=rest_id)
