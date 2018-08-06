@@ -179,6 +179,7 @@
     <form method="POST" action="{% url 'menu:recetas_delete' %}">
     {% csrf_token %}
     <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
+    <button class="btn btn-info" type="button"><i class="material-icons">get_app</i></button>
     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
     {% if recetas.count == 0 %}
     No hay ning&uacute;n recetas.

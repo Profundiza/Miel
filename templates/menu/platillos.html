@@ -146,7 +146,7 @@
                                                             </div>
                                                         </td>
                                                         <td>{{ receta.nombre }}</td>
-                                                        <td>${{ receta.unit_cost }}/{{ receta.medida }}</td>
+                                                        <td>{{ receta.unit_cost|currency }}/{{ receta.medida }}</td>
                                                         <td><input
                                                                 type="number"
                                                                 class="form-control"
@@ -181,11 +181,13 @@
                     <h4 class="card-title ">{{ tipo|title }}s</h4>
                 </div>
                 <div class="card-body">
+                    {% load myfilters %}
                     <form method="POST" action="{% url 'menu:platillos_delete' %}">
                         {% csrf_token %}
                         <input hidden name="current-plat" value="{{ platillo.id }}" />
-                    <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
-                    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-prov"><i
+                        <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
+                        <button class="btn btn-info" type="button"><i class="material-icons">get_app</i></button>
+                        <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-prov"><i
                             class="material-icons">add</i></button>
                     {% if recetas.count == 0 %}
                         No hay ningun recetas.
@@ -206,7 +208,6 @@
                                 <tbody>
                                 {#TODO make table more narrow, expand to modal for more information#}
                                 {#TODO collapsable table coluemns#}
-                                {% load myfilters %}
                                 {% for platillo in platillos %}
                                     <tr>
                                     <td>
