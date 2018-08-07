@@ -62,46 +62,7 @@ def proveedores(request):
 
 def platillos(request):
     if request.method == "POST":
-        mi_ingredientes = Ingrediente.objects.filter(
-            pk__in=request.POST.getlist('added-ing[]'))
-        mi_recetas = Receta.objects.filter(
-            pk__in=request.POST.getlist('added-rec[]'))
-
-        fields = {
-            'restaurante': request.user.restaurante,
-            'nombre': request.POST['nombre'],
-            'precio': request.POST['precio'],
-            'bebida': 'bebidas' in request.resolver_match.view_name,
-            'costo': 0  # temp for first save
-        }
-        cost = 0
-        platillo = Platillo.objects.create(**fields)
-        for ing in mi_ingredientes:
-            q = float(request.POST['ing-' + str(ing.id)])
-            ing_fields = {
-                'platillo': platillo,
-                'ingrediente': ing,
-                'cantidad': q
-            }
-            cost += ing.unit_cost * q
-            PlatilloIng.objects.create(**ing_fields)
-        for rec in mi_recetas:
-            q = float(request.POST['rec-' + str(rec.id)])
-            rec_fields = {
-                'platillo': platillo,
-                'receta': rec,
-                'cantidad': q
-            }
-            cost += rec.unit_cost * q
-            PlatilloRec.objects.create(**rec_fields)
-        platillo.costo = cost
-        platillo.save()
-
-        if 'bebidas' in request.resolver_match.view_name:
-            redirect_to = 'menu:bebidas'
-        else:
-            redirect_to = 'menu:platillos'
-        return redirect(redirect_to)
+        return create_platillo(request)
     else:
         rest = request.user.restaurante
         plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=False)
@@ -116,6 +77,47 @@ def platillos(request):
         return render(request, 'menu/platillos.html', context)
 
 
+def create_platillo(request):
+    mi_ingredientes = Ingrediente.objects.filter(
+        pk__in=request.POST.getlist('added-ing[]'))
+    mi_recetas = Receta.objects.filter(
+        pk__in=request.POST.getlist('added-rec[]'))
+    fields = {
+        'restaurante': request.user.restaurante,
+        'nombre': request.POST['nombre'],
+        'precio': request.POST['precio'],
+        'bebida': 'bebidas' in request.resolver_match.view_name,
+        'costo': 0  # temp for first save
+    }
+    cost = 0
+    platillo = Platillo.objects.create(**fields)
+    for ing in mi_ingredientes:
+        q = float(request.POST['ing-' + str(ing.id)])
+        ing_fields = {
+            'platillo': platillo,
+            'ingrediente': ing,
+            'cantidad': q
+        }
+        cost += ing.unit_cost * q
+        PlatilloIng.objects.create(**ing_fields)
+    for rec in mi_recetas:
+        q = float(request.POST['rec-' + str(rec.id)])
+        rec_fields = {
+            'platillo': platillo,
+            'receta': rec,
+            'cantidad': q
+        }
+        cost += rec.unit_cost * q
+        PlatilloRec.objects.create(**rec_fields)
+    platillo.costo = cost
+    platillo.save()
+    if 'bebidas' in request.resolver_match.view_name:
+        redirect_to = 'menu:bebidas'
+    else:
+        redirect_to = 'menu:platillos'
+    return redirect(redirect_to)
+
+
 def del_platillo(request):
     for _id in request.POST.getlist('plat-del[]'):
         Platillo.objects.get(id=_id).delete()
@@ -123,17 +125,20 @@ def del_platillo(request):
 
 
 def bebidas(request):
-    rest = request.user.restaurante
-    plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=True)
-    context = {
-        'restaurante': rest,
-        'platillos': plats,
-        'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
-        'recetas': Receta.objects.filter(restaurante__id=rest.id),
-        'tipo': 'bebida',
-        'form': PlatilloForm(),
-    }
-    return render(request, 'menu/platillos.html', context)
+    if request.method == "POST":
+        return create_platillo(request)
+    else:
+        rest = request.user.restaurante
+        plats = Platillo.objects.filter(restaurante__id=rest.id, bebida=True)
+        context = {
+            'restaurante': rest,
+            'platillos': plats,
+            'ingredientes': Ingrediente.objects.filter(restaurante__id=rest.id),
+            'recetas': Receta.objects.filter(restaurante__id=rest.id),
+            'tipo': 'bebida',
+            'form': PlatilloForm(),
+        }
+        return render(request, 'menu/platillos.html', context)
 
 
 def ingredientes(request):
