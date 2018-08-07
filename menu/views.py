@@ -22,6 +22,12 @@ class RecetaUpdateView(UpdateView):
         item = Receta.objects.get(id=self.item_id)
         return HttpResponse(render_to_string('menu/receta_edit_form_success.html', {'item': item}))
 
+    def get_form(self, *args, **kwargs):
+        form = super(RecetaUpdateView, self).get_form(RecetaForm)
+        form.fields['ingredientes'].widget = forms.CheckboxSelectMultiple()
+        form.fields['ingredientes'].queryset = Ingrediente.objects.filter(recetacomp__receta_id=kwargs['pk'])
+        return form
+
 
 def analisis(request):
     context = {
@@ -65,7 +71,8 @@ def platillos(request):
             'restaurante': request.user.restaurante,
             'nombre': request.POST['nombre'],
             'precio': request.POST['precio'],
-            'bebida': 'bebidas' in request.resolver_match.view_name
+            'bebida': 'bebidas' in request.resolver_match.view_name,
+            'costo': 0  # temp for first save
         }
         cost = 0
         platillo = Platillo.objects.create(**fields)

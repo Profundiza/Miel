@@ -24,7 +24,14 @@ class IngredienteForm(BaseModelForm):
 class RecetaForm(BaseModelForm):
     class Meta:
         model = Receta
-        fields = ('nombre', 'medida', 'cantidad')
+        fields = ('nombre', 'medida', 'cantidad', 'ingredientes')
+
+    # def __init__(self, *args, **kwargs):
+    #     ingredientes = kwargs.pop('ingredientes')
+    #     super(RecetaForm, self).__init__(*args, **kwargs)
+    #     if ingredientes:
+    #         self.fields['ingredientes'].widget = forms.widgets.CheckboxSelectMultiple()
+    #         self.fields['ingredientes'].queryset = ingredientes
 
 
 class PlatilloForm(BaseModelForm):

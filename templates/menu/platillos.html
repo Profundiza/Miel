@@ -91,7 +91,7 @@
                                                             </div>
                                                         </td>
                                                         <td>{{ ingredient.nombre }}</td>
-                                                        <td>${{ ingredient.unit_cost }}/{{ ingredient.medida }}</td>
+                                                        <td>{{ ingredient.unit_cost|currency }}/{{ ingredient.medida }}</td>
                                                         <td><input
                                                                 type="number"
                                                                 class="form-control"

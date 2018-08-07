@@ -12,4 +12,5 @@ th.table-filter, td.table-filter {
 }
 a.btn {
   -webkit-appearance: none;
+  color: white;
 }

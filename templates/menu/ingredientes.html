@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base.html" %}{% load myfilters %}
 {% block title %}Ingredientes{% endblock %}
 {% block content %}
 {% include "menu/menu_tabs.html" %}
@@ -105,7 +105,7 @@
                 <td>{{ ingredient.nombre }}</td>
                 <td>{{ ingredient.marca }}</td>
                 <td>{{ ingredient.proveedor }}</td>
-                <td>${{ ingredient.unit_cost }}/{{ ingredient.medida }}</td>
+                <td>{{ ingredient.unit_cost|currency }}/{{ ingredient.medida }}</td>
                 <td class="td-actions text-right">
                     <button type="button" rel="tooltip" class="btn btn-success ing-edit">
                         <i class="material-icons">edit</i>

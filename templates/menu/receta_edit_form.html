@@ -5,28 +5,45 @@
     <div class="card">
         <div class="card-header card-header-primary">
             <h4 class="card-title ">Cambiar Receta</h4>
-            <a class="btn btn-info" href="{% url 'menu:recetas' %}">
-                <i class="material-icons">exit</i>
-            </a>
         </div>
         <div class="card-body">
             <form id="item_update_form" method='post' class="form" role="form" action=''>
                 {% csrf_token %}{% load myfilters %}
                 {{ form.non_field_errors }}
                 <div class="form-group">
-                {% for field in form %}
-                    <div class="form-group">
-                        {% if field.errors %}
-                            <ul class="form-errors">
-                            {% for error in field.errors %}
-                                <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
-                            {% endfor %}
-                            </ul>
-                        {% endif %}
-                        {{ field.label_tag }} {{ field|addclass:'form-control' }}
-                        {% if field.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
-                    </div>
-                {% endfor %}
+                    {% if form.nombre.errors %}
+                        <ul class="form-errors">
+                        {% for error in form.nombre.errors %}
+                            <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ form.nombre.label_tag }} {{ form.nombre|addclass:'form-control' }}
+                    {% if form.nombre.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
+                </div>
+                <div class="form-row">
+                <div class="form-group col-6">
+                    {% if form.cantidad.errors %}
+                        <ul class="form-errors">
+                        {% for error in form.cantidad.errors %}
+                            <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ form.cantidad.label_tag }} {{ form.cantidad|addclass:'form-control' }}
+                    {% if form.cantidad.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
+                </div>
+                <div class="form-group col-6">
+                    {% if form.medida.errors %}
+                        <ul class="form-errors">
+                        {% for error in form.medida.errors %}
+                            <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ form.medida|addclass:'form-control' }}
+                    {% if form.nombre.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
+                </div>
                 </div>
             <div class="row">
                 <div class="col-md-5">
@@ -54,7 +71,7 @@
             </div>
                 </div>
             <div class="col-md-2">
-                <button class="btn btn-default"><span class="material-icons">import_export</span></button>
+                <button class="btn btn-default"><span class="material-icons">compare_arrows</span></button>
             </div>
                 <div class="col-md-5">
                 <div class="table-responsive table-wrapper-scroll-y">
@@ -81,9 +98,12 @@
             </div>
                 </div>
             </div>
-x
             </form>
         </div>
+    <div class="card-footer">
+        <a class="btn btn-default"><span class="material-icons">keyboard_return</span></a>
+        <button class="btn btn-primary"><span class="material-icons">check</span></button>
+    </div>
     </div>
     </div>
 

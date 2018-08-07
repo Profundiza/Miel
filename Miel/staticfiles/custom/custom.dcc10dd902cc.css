@@ -10,3 +10,7 @@ th.table-filter, td.table-filter {
 .center {
   margin: auto;
 }
+a.btn {
+  -webkit-appearance: none;
+  color: white;
+}

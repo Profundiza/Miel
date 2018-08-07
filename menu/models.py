@@ -69,7 +69,7 @@ class Receta(models.Model):
 
     def get_unit_cost(self):
         try:
-            uc = int(self.costo) / int(self.cantidad)
+            uc = float(self.costo) / float(self.cantidad)
         except (ZeroDivisionError, TypeError):
             uc = 0
         return uc
@@ -100,8 +100,8 @@ class Platillo(models.Model):
     bebida = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        self.ganancia = self.precio - self.costo
-        self.costo_percentaje = 100 * self.costo / self.precio
+        self.ganancia = float(self.precio) - float(self.costo)
+        self.costo_percentaje = 100 * float(self.costo) / float(self.precio)
         super(Platillo, self).save(*args, **kwargs)
 
     def __str__(self):
