@@ -1,11 +1,51 @@
+from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
+from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import UpdateView
 
 from menu.forms import *
 from .models import *
+
+
+def modifier(request, pk):
+    receta = Receta.objects.get(id=pk)
+    form = RecetaForm(instance=receta)
+    # Create the formset class
+    RecetaCompFormset = inlineformset_factory(Receta, RecetaComp, exclude=[])
+    # Create the formset
+    formset = RecetaCompFormset(instance=receta, queryset=RecetaComp.objects.filter(receta=receta))
+
+    try:
+        err = request.GET['err']
+    except KeyError:
+        err = None
+
+    dict = {
+        "form": form
+        , "formset": formset
+        , "instance": receta
+        , "error": err
+    }
+
+    if request.method == "POST":
+        form = RecetaForm(request.POST, instance=receta)
+        formset = RecetaCompFormset(request.POST, instance=receta)
+
+        if form.is_valid() and formset.is_valid():
+            client_mod = form.save()
+            id = client_mod.id
+            formset.save()
+
+            return HttpResponseRedirect(reverse('menu:recetas'))
+        else:
+            return HttpResponseRedirect(
+                "/menu/recetas/%(id)s/?err=warning" % {"id": pk}
+            )
+
+    return render(request, 'menu/receta_edit_form.html', dict)
 
 
 class RecetaUpdateView(UpdateView):
@@ -22,11 +62,10 @@ class RecetaUpdateView(UpdateView):
         item = Receta.objects.get(id=self.item_id)
         return HttpResponse(render_to_string('menu/receta_edit_form_success.html', {'item': item}))
 
-    def get_form(self, *args, **kwargs):
-        form = super(RecetaUpdateView, self).get_form(RecetaForm)
-        form.fields['ingredientes'].widget = forms.CheckboxSelectMultiple()
-        form.fields['ingredientes'].queryset = Ingrediente.objects.filter(recetacomp__receta_id=kwargs['pk'])
-        return form
+    def get_form_kwargs(self):
+        kwargs = super(RecetaUpdateView, self).get_form_kwargs()
+        kwargs.update({'user': self.request.user})
+        return kwargs
 
 
 def analisis(request):

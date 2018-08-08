@@ -18,20 +18,19 @@ class ProveedorForm(BaseModelForm):
 class IngredienteForm(BaseModelForm):
     class Meta:
         model = Ingrediente
-        fields = ('nombre', 'marca', 'medida', 'cantidad', 'costo')
+        fields = ('nombre', 'marca', 'medida', 'cantidad', 'costo', 'unit_cost')
 
 
 class RecetaForm(BaseModelForm):
     class Meta:
         model = Receta
-        fields = ('nombre', 'medida', 'cantidad', 'ingredientes')
+        fields = ('nombre', 'medida', 'cantidad')
 
-    # def __init__(self, *args, **kwargs):
-    #     ingredientes = kwargs.pop('ingredientes')
-    #     super(RecetaForm, self).__init__(*args, **kwargs)
-    #     if ingredientes:
-    #         self.fields['ingredientes'].widget = forms.widgets.CheckboxSelectMultiple()
-    #         self.fields['ingredientes'].queryset = ingredientes
+
+class RecetaCompForm(BaseModelForm):
+    class Meta:
+        model = RecetaComp
+        fields = ('medida', 'cantidad')
 
 
 class PlatilloForm(BaseModelForm):

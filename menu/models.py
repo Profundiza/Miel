@@ -61,7 +61,7 @@ class Ingrediente(models.Model):
 class Receta(models.Model):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=50)
-    ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp')
+    ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp', through_fields=('receta', 'ingrediente'))
     medida = models.CharField(max_length=30, choices=[('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL','mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'unit'), ('dozen', 'dozen')])
     cantidad = models.FloatField()
     costo = models.FloatField(null=True)
@@ -86,6 +86,12 @@ class RecetaComp(models.Model):
     receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
+    medida = models.CharField(max_length=30, choices=[('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL','mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'unit'), ('dozen', 'dozen')])
+
+    def save(self, *args, **kwargs):
+        if not self.medida:
+            self.medida = self.ingrediente.medida
+        super(RecetaComp, self).save(*args, **kwargs)
 
 
 class Platillo(models.Model):

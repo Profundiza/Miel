@@ -6,9 +6,12 @@
         <div class="card-header card-header-primary">
             <h4 class="card-title ">Cambiar Receta</h4>
         </div>
+        <form id="item_update_form" method='post' class="form" role="form" action="{% url 'menu:recetas_view' instance.pk %}">
         <div class="card-body">
-            <form id="item_update_form" method='post' class="form" role="form" action=''>
                 {% csrf_token %}{% load myfilters %}
+        {% if error %}
+        There was an error in saving the form.
+        {% endif %}
                 {{ form.non_field_errors }}
                 <div class="form-group">
                     {% if form.nombre.errors %}
@@ -45,65 +48,34 @@
                     {% if form.nombre.help_text %}<div class="form-helptext">{{ field.help_text }}</div>{% endif %}
                 </div>
                 </div>
-            <div class="row">
-                <div class="col-md-5">
-                <div class="table-responsive table-wrapper-scroll-y">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                    <th>Ingrediente</th>
-                    <th>Costo</th>
-                    <th>Cantidad</th>
-                    <th>Medida</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for ing in ingredientes %}
-                        <tr>
-                        <td>{{ ing.nombre }}</td>
-                        <td>{{ ing.unit_cost|currency }}/{{ ing.medida }}</td>
-                        <td><input type="number" class="form-control" name="ing-"{{ ing.id }} /></td>
-                        <td>{{ ing.medida }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-                </div>
-            <div class="col-md-2">
-                <button class="btn btn-default"><span class="material-icons">compare_arrows</span></button>
-            </div>
-                <div class="col-md-5">
-                <div class="table-responsive table-wrapper-scroll-y">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                    <th>Ingrediente</th>
-                    <th>Costo</th>
-                    <th>Cantidad</th>
-                    <th>Medida</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for ing in ingredientes %}
-                        <tr>
-                        <td>{{ ing.nombre }}</td>
-                        <td>{{ ing.unit_cost|currency }}/{{ ing.medida }}</td>
-                        <td><input type="number" class="form-control" name="ing-"{{ ing.id }} /></td>
-                        <td>{{ ing.medida }}</td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-                </div>
-            </div>
-            </form>
+        <div class="table-responsive table-wrapper-scroll-y">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                <th>Nombre</th>
+                <th>Cantidad</th>
+                <th>Medida</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{ formset.management_form }}
+                {% for ing in formset %}
+                <tr>
+                    <td>{{ ing.ingrediente }}{{ ing.ingrediente.errors }}</td>
+                    <td>{{ ing.cantidad }}{{ ing.cantidad.errors }}</td>
+                    <td>{{ ing.medida }}{{ ing.medida.errors }}</td>
+                    <td class="hidden">{{ ing.id }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
         </div>
     <div class="card-footer">
         <a class="btn btn-default"><span class="material-icons">keyboard_return</span></a>
         <button class="btn btn-primary"><span class="material-icons">check</span></button>
     </div>
+    </form>
     </div>
     </div>
 
