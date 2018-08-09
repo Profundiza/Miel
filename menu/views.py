@@ -43,7 +43,7 @@ def recetas_modifier(request, pk):
             return HttpResponseRedirect(reverse('menu:recetas'))
         else:
             return HttpResponseRedirect(
-                "/menu/recetas/%(id)s/?err=warning" % {"id": pk}
+                "/menu/recetas/cambiar/%(id)s/?err=warning" % {"id": pk}
             )
 
     return render(request, 'menu/receta_edit_form.html', dict)
@@ -73,24 +73,36 @@ def platillos_modifier(request, pk):
     }
 
     if request.method == "POST":
-        form = RecetaForm(request.POST, instance=platillo)
+        form = PlatilloForm(request.POST, instance=platillo)
         formset1 = PlatilloIngFormset(request.POST, instance=platillo)
         formset2 = PlatilloRecFormset(request.POST, instance=platillo)
 
         if form.is_valid() and formset1.is_valid() and formset2.is_valid:
+            if 'bebida' in request.resolver_match.view_name:
+                form.cleaned_data['bebida'] = True
+            else:
+                form.cleaned_data['bebida'] = False
             client_mod = form.save()
             id = client_mod.id
             formset1.save()
             formset2.save()
 
-            # TODO redirect to platillo view
-            return HttpResponseRedirect(reverse('menu:platillos'))
+            if 'bebida' in request.resolver_match.view_name:
+                # TODO redirect to platillo view
+                return redirect('menu:bebidas')
+            return redirect('menu:platillos')
         else:
-            return HttpResponseRedirect(
-                "/menu/platillos/%(id)s/?err=warning" % {"id": pk}
-            )
+            if 'bebida' in request.resolver_match:
+                url = "/menu/bebidas/cambiar/%(id)s/?err=warning" % {"id": pk}
+            else:
+                url = "/menu/platillos/cambiar/%(id)s/?err=warning" % {"id": pk}
+            return HttpResponseRedirect(url)
 
-    return render(request, 'menu/platillo_edit_form.html', dict)
+    if 'bebida' in request.resolver_match.view_name:
+        url = 'menu/bebida_edit_form.html'
+    else:
+        url = 'menu/platillo_edit_form.html'
+    return render(request, url, dict)
 
 
 class IngredienteUpdateView(UpdateView):

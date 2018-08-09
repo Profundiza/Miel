@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from django.contrib.auth.models import User, Group, AbstractUser
 from django.db import models
 
@@ -18,7 +17,7 @@ class Restaurante(models.Model):
 
 # TODO Move to accounts app
 class CustomUser(AbstractUser):
-    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
+    restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT, null=True)
     is_admin = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
     is_employee = models.BooleanField(default=True)

@@ -36,7 +36,7 @@ class RecetaCompForm(BaseModelForm):
 class PlatilloForm(BaseModelForm):
     class Meta:
         model = Platillo
-        fields = ('nombre', 'precio')
+        fields = ('nombre', 'precio', 'bebida')
 
 
 class PlatilloIngForm(BaseModelForm):
