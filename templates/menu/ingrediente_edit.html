@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'menu/menu_tabs.html' %}
+    <div class="card">
+    <div class="card-header card-header-primary">
+        <h4>Cambiar Ingrediente</h4>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+    <div class="card-body">{% load myfilters %}
+        <div class="form-group">
+            {{ form.nombre.label_tag }}{{ form.nombre|addclass:'form-control' }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-6">
+                {{ form.marca.label_tag }}{{ form.marca|addclass:'form-control' }}
+            </div>
+            <div class="form-group col-6">
+                {{ form.proveedor|addclass:'form-control' }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-4">
+                {{ form.costo.label_tag }}{{ form.costo|addclass:'form-control' }}
+            </div>
+            <div class="form-group col-4">
+                {{ form.cantidad.label_tag }}{{ form.cantidad|addclass:'form-control' }}
+            </div>
+            <div class="form-group col-4">
+                {{ form.medida|addclass:'form-control' }}
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-default" href="{% url 'menu:ingredientes' %}"><i class="material-icons">keyboard_return</i></a>
+        <button class="btn btn-primary" value="Update"><i class="material-icons">check</i></button>
+    </div>
+    </form>
+    </div>
+{% endblock %}

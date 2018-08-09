@@ -303,7 +303,7 @@
     function N(t, o, i) {
         var n = void 0 === i ? t : t.slice(0, C(t, 'name', i));
         return n.forEach(function(t) {
-            t.function && console.warn('`modifier.function` is deprecated, use `modifier.fn`!');
+            t.function && console.warn('`recetas_modifier.function` is deprecated, use `recetas_modifier.fn`!');
             var i = t.function || t.fn;
             t.enabled && e(i) && (o.offsets.popper = c(o.offsets.popper), o.offsets.reference = c(o.offsets.reference), o = i(o, t))
         }), o
@@ -400,7 +400,7 @@
             });
         if (!n) {
             var r = '`' + t + '`';
-            console.warn('`' + o + '`' + ' modifier is required by ' + r + ' modifier in order to work, be sure to include it before ' + r + '!')
+            console.warn('`' + o + '`' + ' recetas_modifier is required by ' + r + ' recetas_modifier in order to work, be sure to include it before ' + r + '!')
         }
         return n
     }
@@ -783,7 +783,7 @@
                         p = T(e.instance.modifiers, function(e) {
                             return 'applyStyle' === e.name
                         }).gpuAcceleration;
-                    void 0 !== p && console.warn('WARNING: `gpuAcceleration` option moved to `computeStyle` modifier and will not be supported in future versions of Popper.js!');
+                    void 0 !== p && console.warn('WARNING: `gpuAcceleration` option moved to `computeStyle` recetas_modifier and will not be supported in future versions of Popper.js!');
                     var s, d, a = void 0 === p ? t.gpuAcceleration : p,
                         f = r(e.instance.popper),
                         l = g(f),

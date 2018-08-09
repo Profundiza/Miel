@@ -14,4 +14,5 @@ $(document).ready(function() {
         $(".tab-pane").not($(this).attr('href')).hide();
     });
     $(".bmd-label-static").removeClass("bmd-label-static").addClass("bmd-label-floating");
+    $("label").not(".bmd-label-floating").addClass("bmd-label-floating");
 });

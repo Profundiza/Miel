@@ -15,7 +15,7 @@
 // Interactive list items
 //
 // Use anchor or button elements instead of `li`s or `div`s to create interactive
-// list items. Includes an extra `.active` modifier class for selected items.
+// list items. Includes an extra `.active` recetas_modifier class for selected items.
 
 .list-group-item-action {
   width: 100%; // For `<button>`s (anchors become 100% by default though)
@@ -107,7 +107,7 @@
 
 // Contextual variants
 //
-// Add modifier classes to change text and background color on individual items.
+// Add recetas_modifier classes to change text and background color on individual items.
 // Organizationally, this must come after the `:hover` states.
 
 @each $color, $value in $theme-colors {

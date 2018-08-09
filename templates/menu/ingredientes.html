@@ -107,9 +107,9 @@
                 <td>{{ ingredient.proveedor }}</td>
                 <td>{{ ingredient.unit_cost|currency }}/{{ ingredient.medida }}</td>
                 <td class="td-actions text-right">
-                    <button type="button" rel="tooltip" class="btn btn-success ing-edit">
+                    <a rel="tooltip" class="btn btn-success ing-edit" href="{% url 'menu:ingredientes_edit' ingredient.pk %}">
                         <i class="material-icons">edit</i>
-                    </button>
+                    </a>
                 </td></tr>
             {% endfor %}
             </tbody>

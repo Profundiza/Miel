@@ -336,10 +336,10 @@ XRegExp = XRegExp || (function (undef) {
         if (nativ.match.call(flags, duplicateFlags)) { // Don't use test/exec because they would update lastIndex
             throw new SyntaxError("invalid duplicate regular expression flag");
         }
-        // Strip/apply leading mode modifier with any combination of flags except g or y: (?imnsx)
+        // Strip/apply leading mode recetas_modifier with any combination of flags except g or y: (?imnsx)
         pattern = nativ.replace.call(pattern, /^\(\?([\w$]+)\)/, function ($0, $1) {
             if (nativ.test.call(/[gy]/, $1)) {
-                throw new SyntaxError("can't use flag g or y in mode modifier");
+                throw new SyntaxError("can't use flag g or y in mode recetas_modifier");
             }
             flags = nativ.replace.call(flags + $1, duplicateFlags, "");
             return "";
@@ -2117,7 +2117,7 @@ XRegExp = XRegExp || (function (undef) {
             sub,
             p;
 
-        // Add flags within a leading mode modifier to the overall pattern's flags
+        // Add flags within a leading mode recetas_modifier to the overall pattern's flags
         if (inlineFlags) {
             flags = flags || "";
             inlineFlags[1].replace(/./g, function (flag) {

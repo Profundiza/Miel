@@ -13,10 +13,10 @@ urlpatterns = [
     url(r'^platillos/suprimir/$', views.del_platillo, name='platillos_delete'),
     url(r'^bebidas/$', views.bebidas, name='bebidas'),
     url(r'^ingredientes/$', views.ingredientes, name='ingredientes'),
+    url(r'^ingredientes//?(?P<pk>[-\w\d]+)/?$', views.IngredienteUpdateView.as_view(), name='ingredientes_edit'),
     url(r'^ingredientes/suprimir/$', views.del_ingredient, name='ingredientes_delete'),
     url(r'^recetas/$', views.recetas, name='recetas'),
-    url(r'^recetas//?(?P<pk>[-\w\d]+)/?$', views.modifier, name='recetas_view'),
+    url(r'^recetas//?(?P<pk>[-\w\d]+)/?$', views.recetas_modifier, name='recetas_edit'),
     url(r'^recetas/suprimir/$', views.del_receta, name='recetas_delete'),
-    url(r'^recetas/cambiar//?(?P<pk>[-\w\d]+)/?$', views.edit_receta, name='recetas_edit'),
     url(r'^exportar/$', export.export, name='export'),
 ]

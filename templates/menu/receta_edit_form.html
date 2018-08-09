@@ -6,7 +6,7 @@
         <div class="card-header card-header-primary">
             <h4 class="card-title ">Cambiar Receta</h4>
         </div>
-        <form id="item_update_form" method='post' class="form" role="form" action="{% url 'menu:recetas_view' instance.pk %}">
+        <form id="item_update_form" method='post' class="form" role="form" action="{% url 'menu:recetas_edit' instance.pk %}">
         <div class="card-body">
                 {% csrf_token %}{% load myfilters %}
         {% if error %}
@@ -61,9 +61,9 @@
                 {{ formset.management_form }}
                 {% for ing in formset %}
                 <tr>
-                    <td>{{ ing.ingrediente }}{{ ing.ingrediente.errors }}</td>
-                    <td>{{ ing.cantidad }}{{ ing.cantidad.errors }}</td>
-                    <td>{{ ing.medida }}{{ ing.medida.errors }}</td>
+                    <td>{{ ing.ingrediente|addclass:'form-control' }}{{ ing.ingrediente.errors }}</td>
+                    <td>{{ ing.cantidad|addclass:'form-control' }}{{ ing.cantidad.errors }}</td>
+                    <td>{{ ing.medida|addclass:'form-control' }}{{ ing.medida.errors }}</td>
                     <td class="hidden">{{ ing.id }}</td>
                 </tr>
                 {% endfor %}
@@ -72,7 +72,7 @@
         </div>
         </div>
     <div class="card-footer">
-        <a class="btn btn-default"><span class="material-icons">keyboard_return</span></a>
+        <a class="btn btn-default" href="{% url 'menu:recetas' %}"><span class="material-icons">keyboard_return</span></a>
         <button class="btn btn-primary"><span class="material-icons">check</span></button>
     </div>
     </form>

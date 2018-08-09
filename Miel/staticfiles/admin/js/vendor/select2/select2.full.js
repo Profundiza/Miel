@@ -1958,7 +1958,7 @@ S2.define('select2/selection/search',[
 
         var key = evt.which;
 
-        // We can freely ignore events from modifier keys
+        // We can freely ignore events from recetas_modifier keys
         if (key == KEYS.SHIFT || key == KEYS.CTRL || key == KEYS.ALT) {
           return;
         }

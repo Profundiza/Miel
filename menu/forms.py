@@ -18,7 +18,7 @@ class ProveedorForm(BaseModelForm):
 class IngredienteForm(BaseModelForm):
     class Meta:
         model = Ingrediente
-        fields = ('nombre', 'marca', 'medida', 'cantidad', 'costo', 'unit_cost')
+        fields = ('nombre', 'marca', 'medida', 'cantidad', 'costo',  'proveedor')
 
 
 class RecetaForm(BaseModelForm):

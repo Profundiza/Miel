@@ -10,7 +10,7 @@ from menu.forms import *
 from .models import *
 
 
-def modifier(request, pk):
+def recetas_modifier(request, pk):
     receta = Receta.objects.get(id=pk)
     form = RecetaForm(instance=receta)
     # Create the formset class
@@ -39,6 +39,7 @@ def modifier(request, pk):
             id = client_mod.id
             formset.save()
 
+            # TODO redirect to receta view
             return HttpResponseRedirect(reverse('menu:recetas'))
         else:
             return HttpResponseRedirect(
@@ -48,24 +49,20 @@ def modifier(request, pk):
     return render(request, 'menu/receta_edit_form.html', dict)
 
 
-class RecetaUpdateView(UpdateView):
-    model = Receta
-    form_class = RecetaForm
-    template_name = 'menu/receta_edit_form.html'
+class IngredienteUpdateView(UpdateView):
+    model = Ingrediente
+    form_class = IngredienteForm
+    template_name = 'menu/ingrediente_edit.html'
 
     def dispatch(self, *args, **kwargs):
         self.item_id = kwargs['pk']
-        return super(RecetaUpdateView, self).dispatch(*args, **kwargs)
+        return super(IngredienteUpdateView, self).dispatch(*args, **kwargs)
 
     def form_valid(self, form):
         form.save()
-        item = Receta.objects.get(id=self.item_id)
-        return HttpResponse(render_to_string('menu/receta_edit_form_success.html', {'item': item}))
-
-    def get_form_kwargs(self):
-        kwargs = super(RecetaUpdateView, self).get_form_kwargs()
-        kwargs.update({'user': self.request.user})
-        return kwargs
+        item = Ingrediente.objects.get(id=self.item_id)
+        # TODO view edited item
+        return redirect("menu:ingredientes")
 
 
 def analisis(request):
@@ -251,6 +248,3 @@ def del_receta(request):
         Receta.objects.get(id=_id).delete()
     return redirect('menu:recetas')
 
-
-def edit_receta(request, pk):
-    return redirect('menu:recetas')
