@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^$', views.analisis, name='main'),
     url(r'^proveedores/$', views.proveedores, name='proveedores'),
     url(r'^platillos/$', views.platillos, name='platillos'),
+    url(r'^platillos//?(?P<pk>[-\w\d]+)/?$', views.platillos_modifier, name='platillos_edit'),
     url(r'^platillos/suprimir/$', views.del_platillo, name='platillos_delete'),
     url(r'^bebidas/$', views.bebidas, name='bebidas'),
     url(r'^ingredientes/$', views.ingredientes, name='ingredientes'),

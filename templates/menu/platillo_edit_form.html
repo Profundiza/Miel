@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include 'menu/menu_tabs.html' %}
+    <div class="row">
+    <div class="card">
+        <div class="card-header card-header-primary">
+            <h4 class="card-title ">Cambiar Platillo</h4>
+        </div>
+        <form id="item_update_form" method='post' class="form" role="form" action="{% url 'menu:platillos_edit' instance.pk %}">
+        <div class="card-body">
+                {% csrf_token %}{% load myfilters %}
+        {% if error %}
+        There was an error in saving the form.
+        {% endif %}
+                {{ form.non_field_errors }}
+                <div class="form-row">
+                <div class="form-group col-6">
+                    {% if form.nombre.errors %}
+                        <ul class="form-errors">
+                        {% for error in form.nombre.errors %}
+                            <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ form.nombre.label_tag }} {{ form.nombre|addclass:'form-control' }}
+                    {% if form.nombre.help_text %}<div class="form-helptext">{{ form.nombre.help_text }}</div>{% endif %}
+                </div>
+                <div class="form-group col-6">
+                    {% if form.precio.errors %}
+                        <ul class="form-errors">
+                        {% for error in form.precio.errors %}
+                            <li><span class="fa fa-exclamation-triangle"></span> <strong>{{ error|escape }}</strong></li>
+                        {% endfor %}
+                        </ul>
+                    {% endif %}
+                    {{ form.precio.label_tag }}{{ form.precio|addclass:'form-control' }}
+                    {% if form.precio.help_text %}<div class="form-helptext">{{ form.precio.help_text }}</div>{% endif %}
+                </div>
+                </div>
+        <div class="row">
+            <div class="col-md-6">
+            <h5>Ingredientes</h5>
+                <div class="table-responsive table-wrapper-scroll-y">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Medida</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ formset1.management_form }}
+                        {% for ing in formset1 %}
+                        <tr>
+                            <td>{{ ing.ingrediente|addclass:'form-control' }}{{ ing.ingrediente.errors }}</td>
+                            <td>{{ ing.cantidad|addclass:'form-control' }}{{ ing.cantidad.errors }}</td>
+                            <td>{{ ing.medida|addclass:'form-control' }}{{ ing.medida.errors }}</td>
+                            <td class="hidden">{{ ing.id }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+            <h5>Recetas</h5>
+                <div class="table-responsive table-wrapper-scroll-y">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Medida</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{ formset2.management_form }}
+                        {% for rec in formset2 %}
+                        <tr>
+                            <td>{{ rec.receta|addclass:'form-control' }}{{ red.ingrediente.errors }}</td>
+                            <td>{{ rec.cantidad|addclass:'form-control' }}{{ red.cantidad.errors }}</td>
+                            <td>{{ rec.medida|addclass:'form-control' }}{{ rec.medida.errors }}</td>
+                            <td class="hidden">{{ rec.id }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        </div>
+    <div class="card-footer">
+        <a class="btn btn-default" href="{% url 'menu:recetas' %}"><span class="material-icons">keyboard_return</span></a>
+        <button class="btn btn-primary"><span class="material-icons">check</span></button>
+    </div>
+    </form>
+    </div>
+    </div>
+
+{% endblock %}

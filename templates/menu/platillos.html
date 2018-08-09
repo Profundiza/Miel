@@ -226,10 +226,9 @@
                                         <td>{{ platillo.costo_percentaje|percentage }}</td>
                                         <td>{{ platillo.ganancia|currency }}</td>
                                         <td class="td-actions text-right">
-                                            <button type="button" rel="tooltip"
-                                                    class="btn btn-success">
+                                            <a rel="tooltip" class="btn btn-success" href="{% url 'menu:platillos_edit' platillo.pk %}">
                                                 <i class="material-icons">edit</i>
-                                            </button>
+                                            </a>
                                         </td>
                                     </tr>
                                 {% endfor %}

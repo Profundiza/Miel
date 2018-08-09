@@ -49,6 +49,50 @@ def recetas_modifier(request, pk):
     return render(request, 'menu/receta_edit_form.html', dict)
 
 
+def platillos_modifier(request, pk):
+    platillo = Platillo.objects.get(id=pk)
+    form = PlatilloForm(instance=platillo)
+    # Create the formset class
+    PlatilloIngFormset = inlineformset_factory(Platillo, PlatilloIng, exclude=[])
+    PlatilloRecFormset = inlineformset_factory(Platillo, PlatilloRec, exclude=[])
+    # Create the formset
+    formset1 = PlatilloIngFormset(instance=platillo, queryset=PlatilloIng.objects.filter(platillo=platillo))
+    formset2 = PlatilloRecFormset(instance=platillo, queryset=PlatilloRec.objects.filter(platillo=platillo))
+
+    try:
+        err = request.GET['err']
+    except KeyError:
+        err = None
+
+    dict = {
+        "form": form
+        , "formset1": formset1
+        , "formset2": formset2
+        , "instance": platillo
+        , "error": err
+    }
+
+    if request.method == "POST":
+        form = RecetaForm(request.POST, instance=platillo)
+        formset1 = PlatilloIngFormset(request.POST, instance=platillo)
+        formset2 = PlatilloRecFormset(request.POST, instance=platillo)
+
+        if form.is_valid() and formset1.is_valid() and formset2.is_valid:
+            client_mod = form.save()
+            id = client_mod.id
+            formset1.save()
+            formset2.save()
+
+            # TODO redirect to platillo view
+            return HttpResponseRedirect(reverse('menu:platillos'))
+        else:
+            return HttpResponseRedirect(
+                "/menu/platillos/%(id)s/?err=warning" % {"id": pk}
+            )
+
+    return render(request, 'menu/platillo_edit_form.html', dict)
+
+
 class IngredienteUpdateView(UpdateView):
     model = Ingrediente
     form_class = IngredienteForm

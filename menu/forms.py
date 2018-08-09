@@ -37,3 +37,15 @@ class PlatilloForm(BaseModelForm):
     class Meta:
         model = Platillo
         fields = ('nombre', 'precio')
+
+
+class PlatilloIngForm(BaseModelForm):
+    class Meta:
+        model = PlatilloIng
+        fields = ('cantidad', 'medida')
+
+
+class PlatilloRecForm(BaseModelForm):
+    class Meta:
+        model = PlatilloRec
+        fields = ('cantidad', 'medida')

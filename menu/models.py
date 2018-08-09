@@ -4,6 +4,9 @@ from django.contrib.auth.models import User, Group, AbstractUser
 from django.db import models
 
 
+MEDIDAS = [('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL','mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'unit'), ('dozen', 'dozen')]
+
+
 class Restaurante(models.Model):
     id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=100)
@@ -62,7 +65,7 @@ class Receta(models.Model):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=50)
     ingredientes = models.ManyToManyField(Ingrediente, through='RecetaComp', through_fields=('receta', 'ingrediente'))
-    medida = models.CharField(max_length=30, choices=[('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL','mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'unit'), ('dozen', 'dozen')])
+    medida = models.CharField(max_length=30, choices=MEDIDAS)
     cantidad = models.FloatField()
     costo = models.FloatField(null=True)
     unit_cost = models.FloatField(null=True)
@@ -86,7 +89,7 @@ class RecetaComp(models.Model):
     receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
-    medida = models.CharField(max_length=30, choices=[('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL','mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'unit'), ('dozen', 'dozen')])
+    medida = models.CharField(max_length=30, choices=MEDIDAS)
 
     def save(self, *args, **kwargs):
         if not self.medida:
@@ -118,12 +121,14 @@ class PlatilloIng(models.Model):
     platillo = models.ForeignKey(Platillo, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
+    medida = models.CharField(max_length=30, choices=MEDIDAS)
 
     def __str__(self):
-        return self.platillo.nombre + " " + self.ingrediente.name
+        return self.platillo.nombre + " " + self.ingrediente.nombre
 
 
 class PlatilloRec(models.Model):
     platillo = models.ForeignKey(Platillo, on_delete=models.PROTECT)
     receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
     cantidad = models.FloatField()
+    medida = models.CharField(max_length=30, choices=MEDIDAS)
