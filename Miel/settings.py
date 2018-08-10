@@ -10,14 +10,57 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
+import io
 import os
 
 import heroku3
 import psycopg2
+import configparser
 
-# heroku_con = heroku3.from_key()
-# app = heroku_con.apps()['miel-tech']
-# config = app.config().data
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+
+PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = (
+    os.path.join(PROJECT_ROOT, 'static'),
+)
+
+
+def get_env_variable(var_name, default=False):
+    """
+    Get the environment variable or return exception
+    :param var_name: Environment Variable to lookup
+    """
+    try:
+        return os.environ[var_name]
+    except KeyError:
+        env_file = os.environ.get('PROJECT_ENV_FILE', PROJECT_ROOT + "/.env")
+        try:
+            config = io.StringIO()
+            config.write("[DATA]\n")
+            config.write(open(env_file).read())
+            config.seek(0, os.SEEK_SET)
+            cp = configparser.ConfigParser()
+            cp.readfp(config)
+            value = dict(cp.items('DATA'))[var_name.lower()]
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1]
+            elif value.startswith("'") and value.endswith("'"):
+                value = value[1:-1]
+            os.environ.setdefault(var_name, value)
+            return value
+        except (KeyError, IOError):
+            if default is not False:
+                return default
+            from django.core.exceptions import ImproperlyConfigured
+            error_msg = "Either set the env variable '{var}' or place it in your " \
+                        "{env_file} file as '{var} = VALUE'"
+            raise ImproperlyConfigured(error_msg.format(var=var_name, env_file=env_file))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +70,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '21wyid7c7*lptsde03pfhxr$nyrq^(b^cbfksc&)e#68q)*bz2'
+SECRET_KEY = get_env_variable('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -89,10 +132,10 @@ WSGI_APPLICATION = 'Miel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['USER'],
-        'PASSWORD': os.environ['DB_PASS'],
-        'HOST': os.environ['DB_HOST'],
+        'NAME': get_env_variable('DB_NAME'),
+        'USER': get_env_variable('USER'),
+        'PASSWORD': get_env_variable('DB_PASS'),
+        'HOST': get_env_variable('DB_HOST'),
         'PORT': '5432',
     }
 }
@@ -129,17 +172,3 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.0/howto/static-files/
-
-PROJECT_ROOT = os.path.normpath(os.path.dirname(__file__))
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
-# Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
-)
