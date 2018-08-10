@@ -15,9 +15,9 @@ import os
 import heroku3
 import psycopg2
 
-heroku_con = heroku3.from_key("8a23c448-1725-4ddd-9c05-7aef10b8a426")
-app = heroku_con.apps()['miel-tech']
-config = app.config().data
+# heroku_con = heroku3.from_key()
+# app = heroku_con.apps()['miel-tech']
+# config = app.config().data
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -89,10 +89,10 @@ WSGI_APPLICATION = 'Miel.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': config['DB_NAME'],
-        'USER': config['USER'],
-        'PASSWORD': config['DB_PASS'],
-        'HOST': config['DB_HOST'],
+        'NAME': os.environ['DB_NAME'],
+        'USER': os.environ['USER'],
+        'PASSWORD': os.environ['DB_PASS'],
+        'HOST': os.environ['DB_HOST'],
         'PORT': '5432',
     }
 }
