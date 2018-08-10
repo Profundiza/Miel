@@ -185,13 +185,13 @@
                     <form method="POST" action="{% url 'menu:platillos_delete' %}">
                         {% csrf_token %}
                         <input hidden name="current-plat" value="{{ platillo.id }}" />
+                    {% if platillos.count > 0 %}
                         <button class="btn btn-danger" type="submit"><i class="material-icons">delete</i></button>
                         <a class="btn btn-info" href="{% url 'menu:export' %}"><i class="material-icons">get_app</i></a>
+                    {% endif %}
                         <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add-prov"><i
                             class="material-icons">add</i></button>
-                    {% if recetas.count == 0 %}
-                        No hay ning&uacute;n recetas.
-                    {% else %}
+                    {% if platillos.count > 0 %}
                         <div class="table-responsive">
                             <table class="table table-striped">
                                 <thead class="text-primary">
