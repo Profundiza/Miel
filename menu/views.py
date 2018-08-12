@@ -348,7 +348,7 @@ def del_receta(request):
                 'ingredientes': Ingrediente.objects.filter(
                     restaurante__id=request.user.restaurante.id),
                 'form': RecetaForm(),
-                'error': 'Receta está usado en un platillo o bebida.',
+                'error': 'Receta \'%s\' está usado en un platillo o bebida.' % Receta.objects.get(id=_id).nombre,
             }
             return render(request, 'menu/recetas.html', context)
     return redirect('menu:recetas')
