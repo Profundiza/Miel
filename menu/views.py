@@ -1,5 +1,6 @@
+from django.db.models import ProtectedError
 from django.forms import inlineformset_factory
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.template import RequestContext
 from django.template.loader import render_to_string
@@ -121,6 +122,16 @@ class IngredienteUpdateView(UpdateView):
         return redirect("menu:ingredientes")
 
 
+class ProveedorUpdateView(UpdateView):
+    model = Proveedor
+    form_class = ProveedorForm
+    template_name = 'menu/proveedor_edit.html'
+
+    def dispatch(self, *args, **kwargs):
+        self.item_id = kwargs['pk']
+        return super(ProveedorUpdateView, self).dispatch(*args, **kwargs)
+
+
 def analisis(request):
     context = {
         'platillosgood': Platillo.objects.filter(bebida=False).order_by('-ganancia')[:5],
@@ -131,7 +142,7 @@ def analisis(request):
     return render(request, 'menu/analisis.html', context)
 
 
-def proveedores(request):
+def proveedores(request, error=None):
     if request.method == "POST":
         fields = {
             'restaurante': request.user.restaurante,
@@ -148,8 +159,21 @@ def proveedores(request):
         context = {
             'proveedores': prov,
             'form': ProveedorForm(),
+            'error':  error,
         }
         return render(request, 'menu/proveedores.html', context)
+
+
+def proveedores_delete_error(request):
+    return proveedores(request, 'error')
+
+
+def del_proveedores(request, pk):
+    try:
+        Proveedor.objects.get(pk=pk).delete()
+    except ProtectedError:
+        return redirect('menu:proveedores_error')
+    return redirect('menu:proveedores')
 
 
 def platillos(request):
@@ -253,13 +277,26 @@ def ingredientes(request):
             'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
             'proveedores': Proveedor.objects.filter(restaurante__id=request.user.restaurante.id),
             'form': IngredienteForm(),
+            'error': None,
         }
         return render(request, 'menu/ingredientes.html', context)
 
 
 def del_ingredient(request):
     for _id in request.POST.getlist('ing-del[]'):
-        Ingrediente.objects.get(id=_id).delete()
+        try:
+            Ingrediente.objects.get(id=_id).delete()
+        except ProtectedError:
+            context = {
+                'restaurante': request.user.restaurante,
+                'ingredientes': Ingrediente.objects.filter(
+                    restaurante__id=request.user.restaurante.id),
+                'proveedores': Proveedor.objects.filter(
+                    restaurante__id=request.user.restaurante.id),
+                'form': IngredienteForm(),
+                'error': 'Ingrediente \'%s\' está usado en una receta, un platillo, o una bebida.' % Ingrediente.objects.get(id=_id).nombre,
+            }
+            return render(request, 'menu/ingredientes.html', context)
     return redirect('menu:ingredientes')
 
 
@@ -294,13 +331,25 @@ def recetas(request):
         context = {
             'recetas': Receta.objects.filter(restaurante__id=request.user.restaurante.id),
             'ingredientes': Ingrediente.objects.filter(restaurante__id=request.user.restaurante.id),
-            'form': form
+            'form': form,
+            'error': None,
         }
         return render(request, 'menu/recetas.html', context)
 
 
 def del_receta(request):
     for _id in request.POST.getlist('rec-del[]'):
-        Receta.objects.get(id=_id).delete()
+        try:
+            Receta.objects.get(id=_id).delete()
+        except ProtectedError:
+            context = {
+                'recetas': Receta.objects.filter(
+                    restaurante__id=request.user.restaurante.id),
+                'ingredientes': Ingrediente.objects.filter(
+                    restaurante__id=request.user.restaurante.id),
+                'form': RecetaForm(),
+                'error': 'Receta está usado en un platillo o bebida.',
+            }
+            return render(request, 'menu/recetas.html', context)
     return redirect('menu:recetas')
 

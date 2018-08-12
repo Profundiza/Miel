@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+{% include 'menu/menu_tabs.html' %}
+    <div class="card">
+    <div class="card-header card-header-primary">
+        <h4>Cambiar Proveedor</h4>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+    <div class="card-body">{% load myfilters %}
+        <div class="form-row">
+            <div class="form-group col-6">
+                {{ form.nombre.label_tag }}{{ form.nombre|addclass:'form-control' }}
+            </div>
+            <div class="form-group col-6">
+                {{ form.telefono.label_tag }}{{ form.telefono|addclass:'form-control' }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-6">
+                {{ form.representante.label_tag }}{{ form.representante|addclass:'form-control' }}
+            </div>
+            <div class="form-group col-6">
+                {{ form.telefono_de_representante.label_tag }}{{ form.telefono_de_representante|addclass:'form-control' }}
+            </div>
+        </div>
+        <div class="form-group">
+            {{ form.correo_electronico.label_tag }}{{ form.correo_electronico|addclass:'form-control' }}
+        </div>
+    </div>
+    <div class="card-footer">
+        <a class="btn btn-default" href="{% url 'menu:proveedores' %}"><i class="material-icons">keyboard_return</i></a>
+        <button type="submit" class="btn btn-primary" value="Update"><i class="material-icons">check</i></button>
+    </div>
+    </form>
+    </div>
+{% endblock %}

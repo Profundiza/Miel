@@ -48,8 +48,11 @@
     </div>
   </div>
 </div>
-
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
+{% if error != None %}
+    <div class="alert alert-warning" role="alert">
+        Proveedor está usado en un ingrediente.
+    </div>
+{% endif %}
 {% if proveedores.count > 0 %}
     {# TODO split into two columns #}
     {% for proveedor in proveedores %}
@@ -66,8 +69,8 @@
             </p>
         </div>
         <div class="card-footer">
-            <button rel="tooltip" class="btn"><i class="material-icons">delete</i></button>
-            <button rel="tooltip" class="btn"><i class="material-icons">edit</i></button>
+            <a rel="tooltip" class="btn" href="{% url 'menu:proveedores_delete' proveedor.pk %}"><i class="material-icons">delete</i></a>
+            <a rel="tooltip" class="btn" href="{% url 'menu:proveedores_edit' proveedor.pk %}"><i class="material-icons">edit</i></a>
         </div>
     </div>
     </div>
@@ -75,5 +78,4 @@
     {% if forloop.last %}</div>{% endif %}
 {% endfor %}
 {% endif %}
-
 {% endblock %}

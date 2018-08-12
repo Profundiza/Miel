@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib.auth.models import User, Group, AbstractUser
+from django.core.validators import RegexValidator
 from django.db import models
 
 
@@ -26,9 +27,14 @@ class CustomUser(AbstractUser):
 class Proveedor(models.Model):
     restaurante = models.ForeignKey(Restaurante, on_delete=models.PROTECT)
     nombre = models.CharField(max_length=50)
-    telefono = models.IntegerField(verbose_name='Teléfono')
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 code='invalid_phone_number',
+                                 message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    telefono = models.CharField(max_length=15, validators=[phone_regex], verbose_name='Teléfono')
     representante = models.CharField(max_length=50)
-    telefono_de_representante = models.IntegerField(verbose_name='Teléfono de representante')
+    telefono_de_representante = models.CharField(max_length=15,
+                                                 validators=[phone_regex],
+                                                 verbose_name='Teléfono de representante')
     correo_electronico = models.EmailField(verbose_name='Correo electrónico')
 
     def __str__(self):
@@ -85,7 +91,7 @@ class Receta(models.Model):
 
 
 class RecetaComp(models.Model):
-    receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
+    receta = models.ForeignKey(Receta, on_delete=models.PROTECT)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
     medida = models.CharField(max_length=30, choices=MEDIDAS)
@@ -117,7 +123,7 @@ class Platillo(models.Model):
 
 
 class PlatilloIng(models.Model):
-    platillo = models.ForeignKey(Platillo, on_delete=models.CASCADE)
+    platillo = models.ForeignKey(Platillo, on_delete=models.PROTECT)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
     medida = models.CharField(max_length=30, choices=MEDIDAS)
@@ -128,6 +134,6 @@ class PlatilloIng(models.Model):
 
 class PlatilloRec(models.Model):
     platillo = models.ForeignKey(Platillo, on_delete=models.PROTECT)
-    receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
+    receta = models.ForeignKey(Receta, on_delete=models.PROTECT)
     cantidad = models.FloatField()
     medida = models.CharField(max_length=30, choices=MEDIDAS)
