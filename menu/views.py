@@ -106,6 +106,27 @@ def platillos_modifier(request, pk):
     return render(request, url, dict)
 
 
+def proveedor_modifier(request, pk):
+    proveedor = Proveedor.objects.get(id=pk)
+    form = ProveedorForm(instance=proveedor)
+
+    dict = {
+        "form": form
+        , "instance": proveedor
+    }
+
+    if request.method == "POST":
+        form = ProveedorForm(request.POST, instance=proveedor)
+
+        if form.is_valid():
+            client_mod = form.save()
+            id = client_mod.id
+            return redirect('menu:proveedores')
+
+    dict['form'] = form
+    return render(request, 'menu/proveedor_edit.html', dict)
+
+
 class IngredienteUpdateView(UpdateView):
     model = Ingrediente
     form_class = IngredienteForm
