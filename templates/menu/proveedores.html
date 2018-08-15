@@ -48,11 +48,8 @@
     </div>
   </div>
 </div>
-{% if error != None %}
-    <div class="alert alert-warning" role="alert">
-        Proveedor está usado en un ingrediente.
-    </div>
-{% endif %}
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-prov"><i class="material-icons">add</i></button>
 {% if proveedores.count > 0 %}
     {# TODO split into two columns #}
     {% for proveedor in proveedores %}

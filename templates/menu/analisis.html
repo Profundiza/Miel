@@ -3,11 +3,41 @@
 {% block content %}
 {% include "menu/menu_tabs.html" %}
 {% load myfilters %}
+<form method="GET" action="{% url 'menu:main' %}">
+<div class="row">
+<div class="form-group col-6">
+<label for="filter-tipo">Tipo</label>
+<select class="form-control" name="tipo" id="filter-tipo">
+    <option value="platillo">Platillos</option>
+    <option value="bebida">Bebidas</option>
+</select>
+</div>
+<div class="form-group col-6">
+<label for="filter-sort_by">Ordenar Por</label>
+<select class="form-control" name="sort_by" id="filter-sort_by">
+    <option>Ganancia</option>
+    <option>Costo percentaje</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group col-4">
+<label for="min-price" class="bmd-label-floating">Precio M&iacute;nimo</label>
+<input class="form-control" name="min-price" id="min-price" /></div>
+<div class="form-group col-4">
+<label for="max-price" class="bmd-label-floating">Precio M&aacute;ximo</label>
+<input class="form-control" name="max-price" id="max-price" />
+</div>
+<div class="col-4">
+<button type="submit" class="btn btn-primary">Filtrar</button>
+</div>
+</div>
+</form>
 <div class="row">
 	<div class="col-lg-6 col-md-12">
 		<div class="card">
 		<div class="card-header card-header-info">
-			<h4 class="card-title">Mejores 5 Platillos por Ganancia</h4>
+			<h4 class="card-title">Mejores 5 {{ tipo|title }}s por {{ sort_by|title }}</h4>
 		</div>
 		<div class="card-body table-responsive">
         
@@ -15,14 +45,18 @@
 				<thead class="text-info">
 				<tr><th></th>
 				<th>Nombre</th>
-				<th>Ganancia</th>
+				<th>{{ sort_by|title }}</th>
 				</tr></thead>
 				<tbody>
 					{% for platillo in platillosgood %}
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ platillo.nombre }}</td>
+                    {% if sort_by == 'ganancia' %}
 					<td>{{ platillo.ganancia|currency }}</td>
+                    {% else %}
+					<td>{{ platillo.costo_percentaje|currency }}</td>
+                    {% endif %}
 					</tr>
 					{% endfor %}
 				</tbody>
@@ -33,73 +67,25 @@
 	<div class="col-lg-6 col-md-12">
 		<div class="card">
 		<div class="card-header card-header-warning">
-			<h4 class="card-title">Peores 5 Platillos por Ganancia</h4>
+			<h4 class="card-title">Peores 5 {{ tipo|title }}s por {{ sort_by|title }}</h4>
 		</div>
 		<div class="card-body table-responsive">
 			<table class="table table-hover">
 				<thead class="text-warning">
 				<tr><th></th>
 				<th>Nombre</th>
-				<th>Ganancia</th>
+				<th>{{ sort_by|title }}</th>
 				</tr></thead>
 				<tbody>
 					{% for platillo in platillosbad %}
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ platillo.nombre }}</td>
+                    {% if sort_by == 'ganancia' %}
 					<td>{{ platillo.ganancia|currency }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	  </div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-lg-6 col-md-12">
-		<div class="card">
-		<div class="card-header card-header-info">
-			<h4 class="card-title">Mejores 5 Bebidas Por Ganacia</h4>
-		</div>
-		<div class="card-body table-responsive">
-			<table class="table table-hover">
-				<thead class="text-info">
-				<tr><th></th>
-				<th>Nombre</th>
-				<th>Ganancia</th>
-				</tr></thead>
-				<tbody>
-					{% for bebida in bebidasgood %}
-					<tr>
-					<td>{{ forloop.counter }}</td>
-					<td>{{ bebida.nombre }}</td>
-					<td>{{ bebida.ganancia|currency }}</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	  </div>
-	</div>
-	<div class="col-lg-6 col-md-12">
-		<div class="card">
-		<div class="card-header card-header-warning">
-			<h4 class="card-title">Peores 5 Bebidas por Ganacia</h4>
-		</div>
-		<div class="card-body table-responsive">
-			<table class="table table-hover">
-				<thead class="text-warning">
-				<tr><th></th>
-				<th>Nombre</th>
-				<th>Ganancia</th>
-				</tr></thead>
-				<tbody>
-					{% for bebida in bebidasbad %}
-					<tr>
-					<td>{{ forloop.counter }}</td>
-					<td>{{ bebida.nombre }}</td>
-					<td>{{ bebida.ganancia|currency }}</td>
+                    {% else %}
+					<td>{{ platillo.costo_percentaje|currency }}</td>
+                    {% endif %}
 					</tr>
 					{% endfor %}
 				</tbody>

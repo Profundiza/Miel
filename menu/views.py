@@ -154,11 +154,29 @@ class ProveedorUpdateView(UpdateView):
 
 
 def analisis(request):
+    tipo = request.GET['tipo'] if 'tipo' in request.GET else 'platillo'
+    sort_by = request.GET['sort_by'] if 'sort_by' in request.GET else 'ganancia'
+
+    if tipo == 'platillo':
+        dishes = Platillo.objects.filter(bebida=False)
+    else:
+        dishes = Platillo.objects.filter(bebida=True)
+
+    if 'min-price' in request.GET and request.GET['min-price'] != '':
+        dishes = dishes.filter(precio__gt=float(request.GET['min-price']))
+    if 'max-price' in request.GET and request.GET['max-price'] != '':
+        dishes = dishes.filter(precio__lt=float(request.GET['max-price']))
+    if sort_by == 'ganancia':
+        good_dishes = dishes.order_by('-ganancia')
+        bad_dishes = dishes.order_by('ganancia')
+    else:
+        good_dishes = dishes.order_by('costo_percentaje')
+        bad_dishes = dishes.order_by('-costo_percentaje')
     context = {
-        'platillosgood': Platillo.objects.filter(bebida=False).order_by('-ganancia')[:5],
-        'platillosbad': Platillo.objects.filter(bebida=False).order_by('ganancia')[:5],
-        'bebidasgood': Platillo.objects.filter(bebida=True).order_by('-ganancia')[:5],
-        'bebidasbad': Platillo.objects.filter(bebida=True).order_by('ganancia')[:5]
+        'tipo': tipo,
+        'sort_by': sort_by,
+        'platillosgood': good_dishes[:5],
+        'platillosbad': bad_dishes[:5],
     }
     return render(request, 'menu/analisis.html', context)
 
