@@ -157,10 +157,12 @@ def analisis(request):
     tipo = request.GET['tipo'] if 'tipo' in request.GET else 'platillo'
     sort_by = request.GET['sort_by'] if 'sort_by' in request.GET else 'ganancia'
 
+    dishes = Platillo.objects.filter(restaurante__id=request.user.restaurante.id)
+
     if tipo == 'platillo':
-        dishes = Platillo.objects.filter(bebida=False)
+        dishes = dishes.filter(bebida=False)
     else:
-        dishes = Platillo.objects.filter(bebida=True)
+        dishes = dishes.filter(bebida=True)
 
     if 'min-price' in request.GET and request.GET['min-price'] != '':
         dishes = dishes.filter(precio__gt=float(request.GET['min-price']))
