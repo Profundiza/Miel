@@ -183,16 +183,11 @@ def analisis(request):
 
 def proveedores(request, error=None):
     if request.method == "POST":
-        fields = {
-            'restaurante': request.user.restaurante,
-            'nombre': request.POST['nombre'],
-            'telefono': request.POST['telefono'],
-            'representante': request.POST['representante'],
-            'telefono_de_representante': request.POST['telefono_de_representante'],
-            'correo_electronico': request.POST['correo_electronico'],
-        }
-        Proveedor.objects.create(**fields)
-        return HttpResponseRedirect(reverse('menu:proveedores'))
+        form = ProveedorForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('menu:proveedores')
+        return render(request, 'menu/proveedores.html', {'form': form})
     else:
         prov = Proveedor.objects.filter(restaurante__id=request.user.restaurante.id)
         context = {

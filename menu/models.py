@@ -4,7 +4,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 
-MEDIDAS = [('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL','mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'unit'), ('dozen', 'dozen')]
+MEDIDAS = [('oz', 'oz'), ('lb', 'lb'), ('gal', 'gal'), ('L', 'L'), ('mL', 'mL'), ('g', 'g'), ('kg', 'kg'), ('unit', 'pieza'), ('dozen', 'docena')]
 
 
 class Restaurante(models.Model):
@@ -91,7 +91,7 @@ class Receta(models.Model):
 
 
 class RecetaComp(models.Model):
-    receta = models.ForeignKey(Receta, on_delete=models.PROTECT)
+    receta = models.ForeignKey(Receta, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
     medida = models.CharField(max_length=30, choices=MEDIDAS)
@@ -123,7 +123,7 @@ class Platillo(models.Model):
 
 
 class PlatilloIng(models.Model):
-    platillo = models.ForeignKey(Platillo, on_delete=models.PROTECT)
+    platillo = models.ForeignKey(Platillo, on_delete=models.CASCADE)
     ingrediente = models.ForeignKey(Ingrediente, on_delete=models.PROTECT)
     cantidad = models.FloatField()
     medida = models.CharField(max_length=30, choices=MEDIDAS)
@@ -133,7 +133,7 @@ class PlatilloIng(models.Model):
 
 
 class PlatilloRec(models.Model):
-    platillo = models.ForeignKey(Platillo, on_delete=models.PROTECT)
+    platillo = models.ForeignKey(Platillo, on_delete=models.CASCADE)
     receta = models.ForeignKey(Receta, on_delete=models.PROTECT)
     cantidad = models.FloatField()
     medida = models.CharField(max_length=30, choices=MEDIDAS)

@@ -14,6 +14,10 @@ class ProveedorForm(BaseModelForm):
         model = Proveedor
         fields = ('nombre', 'telefono', 'representante', 'telefono_de_representante', 'correo_electronico')
 
+    def __init__(self, *args, **kwargs):
+        super(ProveedorForm, self).__init__(*args, **kwargs)
+        self.fields['telefono'].error_messages = {'invalid_phone_number': 'Phone number must be entered in the format: \'+999999999\'. Up to 15 digits allowed.'}
+
 
 class IngredienteForm(BaseModelForm):
     class Meta:

@@ -45,6 +45,7 @@
 				<thead class="text-info">
 				<tr><th></th>
 				<th>Nombre</th>
+				<th>Precio</th>
 				<th>{{ sort_by|title }}</th>
 				</tr></thead>
 				<tbody>
@@ -52,7 +53,8 @@
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ platillo.nombre }}</td>
-                    {% if sort_by == 'ganancia' %}
+					<td>{{ platillo.precio|currency }}</td>
+                    {% if sort_by == 'Ganancia' %}
 					<td>{{ platillo.ganancia|currency }}</td>
                     {% else %}
 					<td>{{ platillo.costo_percentaje|currency }}</td>
@@ -74,6 +76,7 @@
 				<thead class="text-warning">
 				<tr><th></th>
 				<th>Nombre</th>
+				<th>Precio</th>
 				<th>{{ sort_by|title }}</th>
 				</tr></thead>
 				<tbody>
@@ -81,7 +84,8 @@
 					<tr>
 					<td>{{ forloop.counter }}</td>
 					<td>{{ platillo.nombre }}</td>
-                    {% if sort_by == 'ganancia' %}
+					<td>{{ platillo.precio|currency }}</td>
+                    {% if sort_by == 'Ganancia' %}
 					<td>{{ platillo.ganancia|currency }}</td>
                     {% else %}
 					<td>{{ platillo.costo_percentaje|currency }}</td>
